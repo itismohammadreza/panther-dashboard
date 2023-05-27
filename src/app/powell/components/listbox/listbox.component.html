@@ -1,0 +1,91 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(fixLabelPos)]="labelPos"
+     [(filled)]="filled"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side'
+    }" class="listbox-wrapper">
+  <div class="field"
+       [ngAddon]="addon"
+       [addonDisabled]="disabled"
+       (onAfterBtnClick)="emitter('onAfterBtnClick',$event)"
+       (onBeforeBtnClick)="emitter('onBeforeBtnClick',$event)">
+    <div>
+      <p-listbox
+        [(ngModel)]="value"
+        [attr.id]="inputId"
+        [ngClass]="{ 'ng-invalid ng-dirty': isInvalid() }"
+        [checkbox]="checkbox"
+        [dataKey]="dataKey"
+        [disabled]="disabled"
+        [filter]="filter"
+        [filterMatchMode]="filterMatchMode"
+        [filterValue]="filterValue"
+        [filterLocale]="filterLocale"
+        [filterBy]="filterBy"
+        [filterPlaceHolder]="filterPlaceHolder"
+        [emptyFilterMessage]="emptyFilterMessage"
+        [listStyle]="listStyle"
+        [listStyleClass]="listStyleClass"
+        [metaKeySelection]="metaKeySelection"
+        [multiple]="multiple"
+        [readonly]="readonly"
+        [emptyMessage]="emptyMessage"
+        [options]="options"
+        [optionLabel]="optionLabel"
+        [optionValue]="optionValue"
+        [optionDisabled]="optionDisabled"
+        [optionGroupLabel]="optionGroupLabel"
+        [optionGroupChildren]="optionGroupChildren"
+        [group]="group"
+        [showToggleAll]="showToggleAll"
+        [style]="style"
+        [styleClass]="styleClass"
+        (onChange)="_onChange($event)"
+        (onDblClick)="_onDblClick($event)"
+        (onClick)="_onClick($event)">
+        <ng-template pTemplate="header" *ngIf="headerTemplate">
+          <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="item" let-item *ngIf="itemTemplate">
+          <ng-container *ngTemplateOutlet="itemTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="group" let-group *ngIf="groupTemplate">
+          <ng-container *ngTemplateOutlet="groupTemplate;context:{$implicit:group}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="filter" let-options="options" *ngIf="filterTemplate">
+          <ng-container *ngTemplateOutlet="filterTemplate;context:{options:options}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="empty" *ngIf="emptyTemplate">
+          <ng-container *ngTemplateOutlet="emptyTemplate;context"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="emptyfilter" *ngIf="emptyFilterTemplate">
+          <ng-container *ngTemplateOutlet="emptyFilterTemplate"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="footer" *ngIf="footerTemplate">
+          <ng-container *ngTemplateOutlet="footerTemplate;context"></ng-container>
+        </ng-template>
+      </p-listbox>
+    </div>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>

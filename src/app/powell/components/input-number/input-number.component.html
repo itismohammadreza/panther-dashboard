@@ -1,0 +1,97 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(labelPos)]="labelPos"
+     [(filled)]="filled"
+     [(inputSize)]="inputSize"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side',
+      'label-float': labelPos == 'float',
+      'clearable': showClear,
+      'buttons-stacked': showButtons && buttonLayout == 'stacked',
+      'buttons-horizontal': showButtons && buttonLayout == 'horizontal',
+      'buttons-vertical': showButtons && buttonLayout == 'vertical'
+    }" class="input-number-wrapper">
+  <div class="field"
+       [ngAddon]="addon"
+       [addonDisabled]="disabled"
+       [addonSize]="inputSize"
+       (onAfterBtnClick)="emitter('onAfterBtnClick',$event)"
+       (onBeforeBtnClick)="emitter('onBeforeBtnClick',$event)">
+    <div [ngClass]="{
+      'p-float-label': label && labelPos == 'float',
+      'p-input-icon-left': icon && iconPos == 'left',
+      'p-input-icon-right': icon && iconPos == 'right',
+      'p-inputtext-sm': inputSize == 'sm',
+      'p-inputtext-lg': inputSize == 'lg',
+      'p-input-filled': filled
+    }">
+      <i *ngIf="icon" [class.p-disabled]="disabled" [ngClass]="icon"></i>
+      <p-inputNumber
+        [(ngModel)]="value"
+        [inputId]="inputId"
+        [ngClass]="{ 'ng-invalid ng-dirty': isInvalid() }"
+        [format]="format"
+        [showButtons]="showButtons"
+        [buttonLayout]="buttonLayout"
+        [incrementButtonClass]="incrementButtonClass"
+        [decrementButtonClass]="decrementButtonClass"
+        [incrementButtonIcon]="incrementButtonIcon"
+        [decrementButtonIcon]="decrementButtonIcon"
+        [locale]="locale"
+        [localeMatcher]="localeMatcher"
+        [mode]="mode"
+        [prefix]="prefix"
+        [suffix]="suffix"
+        [currency]="currency"
+        [currencyDisplay]="currencyDisplay"
+        [useGrouping]="useGrouping"
+        [minFractionDigits]="minFractionDigits"
+        [maxFractionDigits]="maxFractionDigits"
+        [min]="min"
+        [max]="max"
+        [step]="step"
+        [allowEmpty]="allowEmpty"
+        [style]="style"
+        [styleClass]="styleClass"
+        [inputStyle]="inputStyle"
+        [inputStyleClass]="inputStyleClass"
+        [placeholder]="placeholder | ngLabelStar:showRequiredStar:ngControl"
+        [size]="size"
+        [maxlength]="maxlength"
+        [tabindex]="tabindex"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        [title]="title"
+        [autocomplete]="autocomplete"
+        [showClear]="showClear"
+        (onBlur)="_onBlur()"
+        (onFocus)="emitter('onFocus',$event)"
+        (onInput)="_onInput($event)"
+        (onClear)="_onClear()"
+      ></p-inputNumber>
+      <label *ngIf="label && labelPos == 'float'" [class.p-disabled]="disabled" [attr.for]="inputId">
+        {{ label | ngLabelStar:showRequiredStar:ngControl }}
+      </label>
+    </div>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label && labelPos != 'float'"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>

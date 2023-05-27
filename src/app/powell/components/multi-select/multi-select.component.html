@@ -1,0 +1,137 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(labelPos)]="labelPos"
+     [(filled)]="filled"
+     [(inputSize)]="inputSize"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side',
+      'label-float': labelPos == 'float',
+      'clearable': showClear
+    }" class="multi-select-wrapper">
+  <div class="field"
+       [ngAddon]="addon"
+       [addonDisabled]="disabled"
+       [addonSize]="inputSize"
+       (onAfterBtnClick)="emitter('onAfterBtnClick',$event)"
+       (onBeforeBtnClick)="emitter('onBeforeBtnClick',$event)">
+    <div [ngClass]="{
+      'p-float-label': label && labelPos == 'float',
+      'p-input-icon-left': icon && iconPos == 'left',
+      'p-input-icon-right': icon && iconPos == 'right',
+      'p-inputtext-sm': inputSize == 'sm',
+      'p-inputtext-lg': inputSize == 'lg',
+      'p-input-filled': filled
+    }">
+      <i *ngIf="icon" [class.p-disabled]="disabled" [ngClass]="icon"></i>
+      <p-multiSelect
+        [(ngModel)]="value"
+        [inputId]="inputId"
+        [ngClass]="{ 'ng-invalid ng-dirty': isInvalid() }"
+        [appendTo]="appendTo"
+        [autofocusFilter]="autofocusFilter"
+        [autoZIndex]="autoZIndex"
+        [baseZIndex]="baseZIndex"
+        [defaultLabel]="defaultLabel"
+        [dataKey]="dataKey"
+        [disabled]="disabled"
+        [displaySelectedLabel]="displaySelectedLabel"
+        [dropdownIcon]="dropdownIcon"
+        [emptyFilterMessage]="emptyFilterMessage"
+        [filter]="filter"
+        [filterMatchMode]="filterMatchMode"
+        [filterValue]="filterValue"
+        [filterLocale]="filterLocale"
+        [filterBy]="filterBy"
+        [filterPlaceHolder]="filterPlaceHolder"
+        [hideTransitionOptions]="hideTransitionOptions"
+        [itemSize]="itemSize"
+        [maxSelectedLabels]="maxSelectedLabels"
+        [options]="options"
+        [optionLabel]="optionLabel"
+        [optionValue]="optionValue"
+        [optionDisabled]="optionDisabled"
+        [optionGroupLabel]="optionGroupLabel"
+        [optionGroupChildren]="optionGroupChildren"
+        [group]="group"
+        [overlayVisible]="overlayVisible"
+        [panelStyle]="panelStyle"
+        [placeholder]="placeholder | ngLabelStar:showRequiredStar:ngControl"
+        [readonly]="readonly"
+        [emptyMessage]="emptyMessage"
+        [resetFilterOnHide]="resetFilterOnHide"
+        [scrollHeight]="scrollHeight"
+        [selectedItemsLabel]="selectedItemsLabel"
+        [selectionLimit]="selectionLimit"
+        [showHeader]="showHeader"
+        [showTransitionOptions]="showTransitionOptions"
+        [showToggleAll]="showToggleAll"
+        [style]="style"
+        [styleClass]="styleClass"
+        [tabindex]="tabindex"
+        [tooltip]="tooltip"
+        [tooltipStyleClass]="tooltipStyleClass"
+        [tooltipPosition]="tooltipPosition"
+        [tooltipPositionStyle]="tooltipPositionStyle"
+        [showClear]="showClear"
+        [virtualScroll]="virtualScroll"
+        [virtualScrollItemSize]="virtualScrollItemSize"
+        [virtualScrollOptions]="virtualScrollOptions"
+        [lazy]="lazy"
+        [display]="display"
+        (onClick)="emitter('onClick', $event)"
+        (onChange)="_onChange($event)"
+        (onFilter)="emitter('onFilter',$event)"
+        (onFocus)="emitter('onFocus', $event)"
+        (onBlur)="_onBlur()"
+        (onPanelHide)="emitter('onPanelHide', $event)"
+        (onPanelShow)="emitter('onPanelShow', $event)"
+        (onClear)="_onClear()"
+        (onLazyLoad)="emitter('onLazyLoad', $event)">
+        <ng-template pTemplate="item" let-item *ngIf="itemTemplate">
+          <ng-container *ngTemplateOutlet="itemTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="group" let-item *ngIf="groupTemplate">
+          <ng-container *ngTemplateOutlet="groupTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="selectedItems" let-item *ngIf="selectedItemsTemplate">
+          <ng-container *ngTemplateOutlet="selectedItemsTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="header" let-item *ngIf="headerTemplate">
+          <ng-container *ngTemplateOutlet="headerTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="emptyfilter" let-item *ngIf="emptyFilterTemplate">
+          <ng-container *ngTemplateOutlet="emptyFilterTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="empty" let-item *ngIf="emptyTemplate">
+          <ng-container *ngTemplateOutlet="emptyTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="footer" let-item *ngIf="footerTemplate">
+          <ng-container *ngTemplateOutlet="footerTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+      </p-multiSelect>
+      <label *ngIf="label && labelPos == 'float'" [attr.for]="inputId">
+        {{ label | ngLabelStar:showRequiredStar:ngControl }}
+      </label>
+    </div>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label && labelPos != 'float'"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>

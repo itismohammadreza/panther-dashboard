@@ -1,0 +1,15 @@
+<ng-container *ngFor="let item of data;let i=index;let first=first;let last=last">
+  <ng-container
+    *ngTemplateOutlet="contentTemplate;context:{$implicit:item,index:i,first:first,last:last}"></ng-container>
+</ng-container>
+<div class="loading">
+  <ng-container *ngIf="loadingTemplate;else alternativeLoading">
+    <ng-container *ngIf="loading">
+      <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
+    </ng-container>
+  </ng-container>
+  <ng-template #alternativeLoading>
+    <p-progressSpinner [style]="{width:spinnerWidth}" *ngIf="loading"></p-progressSpinner>
+  </ng-template>
+</div>
+<div #anchor></div>

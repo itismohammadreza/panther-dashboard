@@ -1,0 +1,85 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(fixLabelPos)]="labelPos"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side'
+    }" class="file-picker-wrapper">
+  <div class="field">
+    <p-fileUpload
+      [ngClass]="{ 'ng-invalid ng-dirty': isInvalid() }"
+      [files]="value || []"
+      [name]="name"
+      [url]="url"
+      [method]="method"
+      [multiple]="multiple"
+      [accept]="accept"
+      [disabled]="disabled"
+      [auto]="auto"
+      [maxFileSize]="maxFileSize"
+      [fileLimit]="fileLimit"
+      [invalidFileSizeMessageSummary]="invalidFileSizeMessageSummary"
+      [invalidFileSizeMessageDetail]="invalidFileSizeMessageDetail"
+      [invalidFileTypeMessageSummary]="invalidFileTypeMessageSummary"
+      [invalidFileLimitMessageDetail]="invalidFileLimitMessageDetail"
+      [invalidFileLimitMessageSummary]="invalidFileLimitMessageSummary"
+      [invalidFileTypeMessageDetail]="invalidFileTypeMessageDetail"
+      [style]="style"
+      [styleClass]="styleClass"
+      [previewWidth]="previewWidth"
+      [chooseLabel]="chooseLabel"
+      [uploadLabel]="uploadLabel"
+      [cancelLabel]="cancelLabel"
+      [chooseIcon]="chooseIcon"
+      [uploadIcon]="uploadIcon"
+      [cancelIcon]="cancelIcon"
+      [withCredentials]="withCredentials"
+      [mode]="mode"
+      [customUpload]="customUpload"
+      [showUploadButton]="showUploadButton"
+      [showCancelButton]="showCancelButton"
+      [headers]="headers"
+      [uploadStyleClass]="uploadStyleClass"
+      [cancelStyleClass]="cancelStyleClass"
+      [removeStyleClass]="removeStyleClass"
+      [chooseStyleClass]="chooseStyleClass"
+      (onBeforeUpload)="emitter('onBeforeUpload',$event)"
+      (onSend)="emitter('onSend',$event)"
+      (onUpload)="emitter('onUpload',$event)"
+      (onError)="emitter('onError',$event)"
+      (onClear)="_onClear()"
+      (onRemove)="_onRemove($event)"
+      (onSelect)="_onSelect($event)"
+      (onProgress)="emitter('onProgress',$event)"
+      (uploadHandler)="emitter('uploadHandler',$event)">
+      <ng-template pTemplate="toolbar" *ngIf="toolbarTemplate">
+        <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
+      </ng-template>
+      <ng-template pTemplate="file" let-file *ngIf="fileTemplate">
+        <ng-container *ngTemplateOutlet="fileTemplate;context:{$implicit:file}"></ng-container>
+      </ng-template>
+      <ng-template pTemplate="content" let-files *ngIf="contentTemplate">
+        <ng-container *ngTemplateOutlet="contentTemplate;context:{$implicit:files}"></ng-container>
+      </ng-template>
+    </p-fileUpload>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>

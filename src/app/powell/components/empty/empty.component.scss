@@ -1,0 +1,36 @@
+:host {
+  display: block;
+
+  ::ng-deep {
+    .empty-wrapper {
+      text-align: center;
+
+      .empty-icon {
+        i {
+          font-size: 3.5rem;
+        }
+
+        img {
+          max-width: 120px;
+        }
+      }
+
+      .empty-title {
+        margin-top: 1.5rem;
+        font-size: 0.875em;
+      }
+
+      &.rtl {
+        .empty-title {
+          direction: rtl;
+        }
+      }
+
+      &.ltr {
+        .empty-title {
+          direction: ltr;
+        }
+      }
+    }
+  }
+}

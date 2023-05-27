@@ -1,0 +1,70 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(fixLabelPos)]="labelPos"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side'
+    }" class="map-wrapper">
+  <div class="field"
+       [ngAddon]="addon"
+       [addonDisabled]="disabled"
+       (onAfterBtnClick)="emitter('onAfterBtnClick',$event)"
+       (onBeforeBtnClick)="emitter('onBeforeBtnClick',$event)">
+    <div>
+      <ng-button *ngIf="!readonly && showClear" class="clear-map-btn" [pTooltip]="clearTooltip" [icon]="clearIcon"
+                 size="sm" (click)="clearMap()"></ng-button>
+      <div
+        leaflet
+        [attr.id]="inputId"
+        [style.height]="height"
+        [leafletLayers]="layers"
+        [leafletCenter]="center"
+        [leafletZoom]="zoom"
+        [leafletMinZoom]="leafletMinZoom"
+        [leafletMaxZoom]="leafletMaxZoom"
+        [leafletOptions]="options"
+        [leafletPanOptions]="panOptions"
+        [leafletZoomOptions]="zoomOptions"
+        [leafletZoomPanOptions]="zoomPanOptions"
+        [leafletFitBoundsOptions]="fitBoundsOptions"
+        [leafletFitBounds]="leafletFitBounds"
+        [leafletMaxBounds]="leafletMaxBounds"
+        (leafletZoomChange)="onZoomChange($event)"
+        (leafletCenterChange)="onCenterChange($event)"
+        (leafletClick)="_onMapClick($event)"
+        (leafletMapReady)="onMapReady($event)"
+        (leafletDoubleClick)="emitter('onMapDoubleClick',$event)"
+        (leafletMouseDown)="emitter('onMapMouseDown',$event)"
+        (leafletMouseUp)="emitter('onMapMouseUp',$event)"
+        (leafletMouseMove)="emitter('onMapMouseMove',$event)"
+        (leafletMouseOver)="emitter('onMapMouseOver',$event)"
+        (leafletMouseOut)="emitter('onMapMouseOut',$event)"
+        (leafletMapMove)="emitter('onMapMove',$event)"
+        (leafletMapMoveStart)="emitter('onMapMoveStart',$event)"
+        (leafletMapMoveEnd)="emitter('onMapMoveEnd',$event)"
+        (leafletMapZoom)="emitter('onMapZoom',$event)"
+        (leafletMapZoomStart)="emitter('onMapZoomStart',$event)"
+        (leafletMapZoomEnd)="emitter('onMapZoomEnd',$event)"
+      ></div>
+    </div>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>

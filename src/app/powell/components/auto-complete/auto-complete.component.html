@@ -1,0 +1,130 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(labelPos)]="labelPos"
+     [(filled)]="filled"
+     [(inputSize)]="inputSize"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side',
+      'label-float': labelPos == 'float',
+      'clearable': showClear,
+      'has-dropdown': dropdown
+    }" class="auto-complete-wrapper">
+  <div class="field"
+       [ngAddon]="addon"
+       [addonDisabled]="disabled"
+       [addonSize]="inputSize"
+       (onAfterBtnClick)="emitter('onAfterBtnClick',$event)"
+       (onBeforeBtnClick)="emitter('onBeforeBtnClick',$event)">
+    <div [ngClass]="{
+      'p-float-label': label && labelPos == 'float',
+      'p-input-icon-left': icon && iconPos == 'left',
+      'p-input-icon-right': icon && iconPos == 'right',
+      'p-inputtext-sm': inputSize == 'sm',
+      'p-inputtext-lg': inputSize == 'lg',
+      'p-input-filled': filled
+    }">
+      <i *ngIf="icon" [class.p-disabled]="disabled" [ngClass]="icon"></i>
+      <p-autoComplete
+        [(ngModel)]="value"
+        [inputId]="inputId"
+        [ngClass]="{ 'ng-invalid ng-dirty': isInvalid() }"
+        [suggestions]="suggestions"
+        [field]="field"
+        [scrollHeight]="scrollHeight"
+        [dropdown]="dropdown"
+        [multiple]="multiple"
+        [dropdownIcon]="dropdownIcon"
+        [minLength]="minlength"
+        [delay]="delay"
+        [completeOnFocus]="completeOnFocus"
+        [style]="style"
+        [inputStyle]="inputStyle"
+        [panelStyle]="panelStyle"
+        [styleClass]="styleClass"
+        [inputStyleClass]="inputStyleClass"
+        [panelStyleClass]="panelStyleClass"
+        [optionGroupLabel]="optionGroupLabel"
+        [group]="group"
+        [optionGroupChildren]="optionGroupChildren"
+        [placeholder]="placeholder | ngLabelStar:showRequiredStar:ngControl"
+        [readonly]="readonly"
+        [disabled]="disabled"
+        [maxlength]="maxlength"
+        [size]="size"
+        [appendTo]="appendTo"
+        [tabindex]="tabindex"
+        [dataKey]="dataKey"
+        [autoHighlight]="autoHighlight"
+        [type]="type"
+        [showEmptyMessage]="showEmptyMessage"
+        [emptyMessage]="emptyMessage"
+        [autofocus]="autofocus"
+        [forceSelection]="forceSelection"
+        [dropdownMode]="dropdownMode"
+        [baseZIndex]="baseZIndex"
+        [autoZIndex]="autoZIndex"
+        [showTransitionOptions]="showTransitionOptions"
+        [hideTransitionOptions]="hideTransitionOptions"
+        [unique]="unique"
+        [autocomplete]="autocomplete"
+        [showClear]="showClear"
+        [virtualScroll]="virtualScroll"
+        [virtualScrollItemSize]="virtualScrollItemSize"
+        [virtualScrollOptions]="virtualScrollOptions"
+        [lazy]="lazy"
+        (completeMethod)="_completeMethod($event)"
+        (onFocus)="emitter('onFocus', $event)"
+        (onBlur)="_onBlur()"
+        (onKeyUp)="_onKeyUp($event)"
+        (onSelect)="_onSelect($event)"
+        (onUnselect)="_onUnselect($event)"
+        (onDropdownClick)="_onDropdownClick($event)"
+        (onClear)="_onClear()"
+        (onHide)="emitter('onHide', $event)"
+        (onShow)="emitter('onShow', $event)"
+        (onLazyLoad)="emitter('onLazyLoad', $event)">
+        <ng-template pTemplate="item" let-item let-index="index" *ngIf="itemTemplate">
+          <ng-container *ngTemplateOutlet="itemTemplate;context:{$implicit:item,index:index}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="group" let-item *ngIf="groupTemplate">
+          <ng-container *ngTemplateOutlet="groupTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="empty" let-item *ngIf="emptyTemplate">
+          <ng-container *ngTemplateOutlet="emptyTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="selectedItem" let-item *ngIf="selectedItemTemplate">
+          <ng-container *ngTemplateOutlet="selectedItemTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="header" let-item *ngIf="headerTemplate">
+          <ng-container *ngTemplateOutlet="headerTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="footer" let-item *ngIf="footerTemplate">
+          <ng-container *ngTemplateOutlet="footerTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+      </p-autoComplete>
+      <label *ngIf="label && labelPos == 'float'" [class.p-disabled]="disabled" [attr.for]="inputId">
+        {{ label | ngLabelStar:showRequiredStar:ngControl }}
+      </label>
+    </div>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label && labelPos != 'float'"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>

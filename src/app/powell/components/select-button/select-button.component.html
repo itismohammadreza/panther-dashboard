@@ -1,0 +1,49 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(fixLabelPos)]="labelPos"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side'
+    }" class="select-button-wrapper">
+  <div class="field">
+    <p-selectButton
+      [(ngModel)]="value"
+      [attr.id]="inputId"
+      [ngClass]="{ 'ng-invalid ng-dirty': isInvalid() }"
+      [options]="options"
+      [optionLabel]="optionLabel"
+      [optionValue]="optionValue"
+      [optionDisabled]="optionDisabled"
+      [multiple]="multiple"
+      [tabindex]="tabindex"
+      [style]="style"
+      [styleClass]="styleClass"
+      [disabled]="disabled"
+      [dataKey]="dataKey"
+      (onChange)="_onChange($event)"
+      (onOptionClick)="_onOptionClick($event)">
+      <ng-template let-item let-index="index" *ngIf="itemTemplate">
+        <ng-container *ngTemplateOutlet="itemTemplate;context:{$implicit:item,index}"></ng-container>
+      </ng-template>
+    </p-selectButton>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>

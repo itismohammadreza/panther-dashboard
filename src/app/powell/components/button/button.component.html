@@ -1,0 +1,22 @@
+<p-button
+  [type]="type"
+  [label]="async ? _tmpLabel : label"
+  [icon]="async ? _tmpIcon : icon"
+  [iconPos]="iconPos"
+  [badge]="badge"
+  [loading]="loading"
+  [loadingIcon]="loadingIcon"
+  [disabled]="disabled"
+  [style]="style"
+  badgeClass="{{badgeClass}} p-badge-{{ badgeColor }}"
+  styleClass="
+  {{styleClass}}
+  {{defaultState == 1 ? 'default-state' : 'new-state'}}
+  p-button-{{ async ? _tmpAppearance : appearance }}
+  p-button-{{ async ? _tmpColor : color }}
+  p-button-{{ size }}
+  p-button-{{ rounded ? 'rounded' : '' }}
+  p-button-{{ raised ? 'raised' : '' }}"
+  (onClick)="_onClick($event)">
+  <ng-content></ng-content>
+</p-button>

@@ -1,0 +1,77 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(fixLabelPos)]="labelPos"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side'
+    }" class="editor-wrapper">
+  <div class="field">
+    <ng-editor-base
+      [options]="options"
+      [editorID]="inputId"
+      [content]="value"
+      [onDrop_param]="onDrop_param"
+      [onCopy_param]="onCopy_param"
+      [onCut_param]="onCut_param"
+      [onAudioUploadError_param]="onAudioUploadError_param"
+      [onImageUploadBefore_param]="onImageUploadBefore_param"
+      [onImageUploadError_param]="onImageUploadError_param"
+      [onVideoUploadBefore_param]="onVideoUploadBefore_param"
+      [onVideoUploadError_param]="onVideoUploadError_param"
+      [onAudioUploadBefore_param]="onAudioUploadBefore_param"
+      [onResizeEditor_param]="onResizeEditor_param"
+      [imageUploadHandler]="imageUploadHandler"
+      [videoUploadHandler]="videoUploadHandler"
+      [audioUploadHandler]="audioUploadHandler"
+      [localStorageConfig]="localStorageConfig"
+      (created)="_created($event)"
+      (onload)="emitter('onload',$event)"
+      (onScroll)="emitter('onScroll',$event)"
+      (onMouseDown)="emitter('onMouseDown',$event)"
+      (onClick)="emitter('onClick',$event)"
+      (onInput)="_onInput($event)"
+      (onKeyDown)="_onKeyDown($event)"
+      (onKeyUp)="_onKeyUp($event)"
+      (onFocus)="emitter('onFocus',$event)"
+      (onBlur)="_onBlur($event)"
+      (onResizeEditor)="emitter('onResizeEditor',$event)"
+      (onAudioUploadBefore)="emitter('onAudioUploadBefore',$event)"
+      (onVideoUploadError)="emitter('onVideoUploadError',$event)"
+      (onVideoUploadBefore)="emitter('onVideoUploadBefore',$event)"
+      (onImageUploadError)="emitter('onImageUploadError',$event)"
+      (onImageUploadBefore)="emitter('onImageUploadBefore',$event)"
+      (onAudioUploadError)="emitter('onAudioUploadError',$event)"
+      (onDrop)="emitter('onDrop',$event)"
+      (onChange)="_onChange($event)"
+      (showController)="emitter('showController',$event)"
+      (toggleFullScreen)="emitter('toggleFullScreen',$event)"
+      (toggleCodeView)="emitter('toggleCodeView',$event)"
+      (showInline)="emitter('showInline',$event)"
+      (onAudioUpload)="emitter('onAudioUpload',$event)"
+      (onVideoUpload)="emitter('onVideoUpload',$event)"
+      (onImageUpload)="emitter('onImageUpload',$event)"
+      (onCut)="emitter('onCut',$event)"
+      (onCopy)="emitter('onCopy',$event)"
+    ></ng-editor-base>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>
+

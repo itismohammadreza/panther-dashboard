@@ -1,0 +1,51 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(fixLabelPos)]="labelPos"
+     [(filled)]="filled"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side',
+      'layout-horizontal':orientation == 'horizontal',
+      'layout-vertical':orientation == 'vertical',
+      'p-input-filled': filled
+    }" class="multi-checkbox-wrapper">
+  <div [attr.id]="inputId" class="field">
+    <div *ngFor="let item of options" class="option-item">
+      <p-checkbox
+        [(ngModel)]="value"
+        [inputId]="item.id"
+        [ngClass]="{ 'ng-invalid ng-dirty': isInvalid() }"
+        [disabled]="item[optionDisabled]"
+        [name]="groupName"
+        [value]="item[optionValue]"
+        [readonly]="readonly"
+        [style]="style"
+        [styleClass]="styleClass"
+        [checkboxIcon]="checkboxIcon"
+        (onChange)="_onChange()"
+      ></p-checkbox>
+      <label [attr.for]="item.id" [class.p-disabled]="disabled || item[optionDisabled]">
+        {{ item[optionLabel] }}
+      </label>
+    </div>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label"
+    [attr.for]="inputId"
+    [class.p-disabled]="disabled"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>

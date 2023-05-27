@@ -1,0 +1,90 @@
+<div ngConfigHandler
+     [(disableConfigChangeEffect)]="disableConfigChangeEffect"
+     [(rtl)]="rtl"
+     [(fixLabelPos)]="labelPos"
+     [(showRequiredStar)]="showRequiredStar"
+     [ngClass]="{
+      'rtl': rtl,
+      'ltr': !rtl,
+      'label-fix-top': labelPos == 'fix-top',
+      'label-fix-side': labelPos == 'fix-side'
+    }" class="tree-wrapper">
+  <div class="field"
+       [ngAddon]="addon"
+       (onAfterBtnClick)="emitter('onAfterBtnClick',$event)"
+       (onBeforeBtnClick)="emitter('onBeforeBtnClick',$event)">
+    <div>
+      <p-tree
+        [id]="inputId"
+        [ngClass]="{ 'ng-invalid ng-dirty': isInvalid() }"
+        [selectionMode]="selectionMode"
+        [value]="items"
+        [selection]="selection"
+        [style]="style"
+        [styleClass]="styleClass"
+        [contextMenu]="contextMenu"
+        [layout]="layout"
+        [draggableScope]="draggableScope"
+        [droppableScope]="droppableScope"
+        [draggableNodes]="draggableNodes"
+        [droppableNodes]="droppableNodes"
+        [metaKeySelection]="metaKeySelection"
+        [propagateSelectionUp]="propagateSelectionUp"
+        [propagateSelectionDown]="propagateSelectionDown"
+        [loading]="loading"
+        [loadingIcon]="loadingIcon"
+        [emptyMessage]="emptyMessage"
+        [validateDrop]="validateDrop"
+        [filter]="filter"
+        [filterBy]="filterBy"
+        [filterMode]="filterMode"
+        [filterPlaceholder]="filterPlaceHolder"
+        [filterLocale]="filterLocale"
+        [scrollHeight]="scrollHeight"
+        [virtualScroll]="virtualScroll"
+        [virtualScrollItemSize]="virtualScrollItemSize"
+        [virtualScrollOptions]="virtualScrollOptions"
+        [lazy]="lazy"
+        [trackBy]="trackBy"
+        [indentation]="indentation"
+        (selectionChange)="_onSelectionChange($event)"
+        (onNodeSelect)="emitter('onNodeSelect',$event)"
+        (onNodeUnselect)="emitter('onNodeUnselect',$event)"
+        (onNodeExpand)="emitter('onNodeExpand', $event)"
+        (onNodeCollapse)="emitter('onNodeCollapse', $event)"
+        (onNodeContextMenuSelect)="emitter('onNodeContextMenuSelect', $event)"
+        (onNodeDrop)="emitter('onNodeDrop', $event)"
+        (onFilter)="emitter('onFilter', $event)"
+        (onLazyLoad)="emitter('onLazyLoad', $event)"
+        (onScroll)="emitter('onScroll', $event)"
+        (onScrollIndexChange)="emitter('onScrollIndexChange', $event)">
+        <ng-template pTemplate="header" let-item *ngIf="headerTemplate">
+          <ng-container *ngTemplateOutlet="headerTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="footer" let-item *ngIf="footerTemplate">
+          <ng-container *ngTemplateOutlet="footerTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="empty" let-item *ngIf="emptyTemplate">
+          <ng-container *ngTemplateOutlet="emptyTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+        <ng-template pTemplate="loader" let-item *ngIf="loaderTemplate">
+          <ng-container *ngTemplateOutlet="loaderTemplate;context:{$implicit:item}"></ng-container>
+        </ng-template>
+      </p-tree>
+    </div>
+  </div>
+  <label
+    class="fix-label"
+    *ngIf="label"
+    [attr.for]="inputId"
+    [style.minWidth.px]="labelPos == 'fix-side' ? labelWidth : null"
+    [style.maxWidth.px]="labelPos == 'fix-side' ? labelWidth : null">
+    {{ label | ngLabelStar:showRequiredStar:ngControl }}
+  </label>
+  <div *ngIf="hint && showHint()" class="message">{{ hint }}</div>
+  <ng-container *ngFor="let v of validation | keyvalue">
+    <div *ngIf="hasError(v.key)" class="message p-error">
+      {{ v.value }}
+    </div>
+  </ng-container>
+</div>
