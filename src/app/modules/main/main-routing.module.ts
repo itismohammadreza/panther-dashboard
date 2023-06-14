@@ -2,6 +2,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {MainPage} from './main.page';
 import {DashboardPage} from "@modules/main/pages/dashboard/dashboard.page";
+import {ManagerPage} from "@modules/main/pages/manager/manager.page";
 
 const routes: Routes = [
   {
@@ -9,13 +10,18 @@ const routes: Routes = [
     component: MainPage,
     children: [
       {
-        path: '',
+        path: 'models/:modelName',
+        title: 'manage',
+        component: ManagerPage
+      },
+      {
+        path: 'dashboard',
         title: 'dashboard',
         component: DashboardPage
       },
       {
         path: '',
-        redirectTo: '',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
       },
     ],

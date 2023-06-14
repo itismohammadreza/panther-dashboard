@@ -25,7 +25,7 @@
            [alwaysShowPaginator]="alwaysShowPaginator"
            [showFirstLastIcon]="showFirstLastIcon"
            [paginatorPosition]="paginatorPosition"
-           [currentPageReportTemplate]="currentPageReportTemplate"
+           [currentPageReportTemplate]="loading ? '' : currentPageReportTemplate"
            [showCurrentPageReport]="showCurrentPageReport"
            [showJumpToPageDropdown]="showJumpToPageDropdown"
            [showJumpToPageInput]="showJumpToPageInput"
@@ -89,7 +89,7 @@
            (onRowSelect)="emitter('onRowSelect',$event)"
            (onRowUnselect)="emitter('onRowUnselect',$event)"
            (onPage)="emitter('onPage',$event)"
-           (onSort)="emitter('onSort',$event)"
+           (onSort)="_onSort($event)"
            (onFilter)="emitter('onFilter',$event)"
            (onLazyLoad)="_onLazyLoad($event)"
            (onRowExpand)="emitter('onRowExpand',$event)"
@@ -111,17 +111,23 @@
     <ng-template pTemplate="header">
       <ng-container *ngIf="filterDisplay == 'menu'">
         <tr>
-          <th style="width: 3rem" *ngIf="reorderableRows"></th>
-          <th style="width: 3rem" *ngIf="selectionMode == 'radio' || selectionMode == 'checkbox'">
+          <th scope="col" style="width: 3rem" *ngIf="reorderableRows"></th>
+          <th scope="col" style="width: 3rem" *ngIf="selectionMode == 'radio' || selectionMode == 'checkbox'">
             <p-tableHeaderCheckbox *ngIf="selectionMode == 'checkbox'"></p-tableHeaderCheckbox>
           </th>
-          <th *ngFor="let col of colDef"
+          <th scope="col" *ngFor="let col of colDef"
               [pSortableColumn]="col.sort && col.field"
               pReorderableColumn
               [pReorderableColumnDisabled]="!reorderableColumns">
             {{ col.header }}
             <p-sortIcon *ngIf="col.sort" [field]="col.field"></p-sortIcon>
-
+            <ng-button [rounded]="true"
+                       *ngIf="activeSortField == col.field"
+                       appearance="text"
+                       size="sm"
+                       icon="pi pi-sort-alt-slash"
+                       (onClick)="onResetSort($event)">
+            </ng-button>
             <ng-container *ngIf="col.filter as filter">
               <p-columnFilter [field]="col.field"
                               display="menu"
@@ -131,7 +137,7 @@
                               [showOperator]="false"
                               [showAddButton]="false">
                 <ng-template pTemplate="header">
-                  <div class="px-3 pt-3 pb-0"><span class="font-bold">{{filter.header}}</span></div>
+                  <div class="filter-header"><span>{{filter.header}}</span></div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filterCallback="filterCallback" [ngSwitch]="filter.type">
                   <ng-input-text
@@ -201,11 +207,11 @@
       </ng-container>
       <ng-container *ngIf="filterDisplay == 'row'">
         <tr>
-          <th style="width: 3rem" *ngIf="reorderableRows"></th>
-          <th style="width: 3rem" *ngIf="selectionMode == 'radio' || selectionMode == 'checkbox'">
+          <th scope="col" style="width: 3rem" *ngIf="reorderableRows"></th>
+          <th scope="col" style="width: 3rem" *ngIf="selectionMode == 'radio' || selectionMode == 'checkbox'">
             <p-tableHeaderCheckbox *ngIf="selectionMode == 'checkbox'"></p-tableHeaderCheckbox>
           </th>
-          <th *ngFor="let col of colDef"
+          <th scope="col" *ngFor="let col of colDef"
               [pSortableColumn]="col.field"
               pReorderableColumn
               [pReorderableColumnDisabled]="!reorderableColumns">
@@ -220,9 +226,9 @@
           </ng-container>
         </tr>
         <tr>
-          <th style="width: 3rem" *ngIf="selectionMode == 'radio' || selectionMode == 'checkbox'">
+          <th scope="col" style="width: 3rem" *ngIf="selectionMode == 'radio' || selectionMode == 'checkbox'">
           </th>
-          <th class="row-filter-wrapper" *ngFor="let col of colDef">
+          <th scope="col" class="row-filter-wrapper" *ngFor="let col of colDef">
             <ng-container *ngIf="col.filter as filter">
               <p-columnFilter [field]="col.field"
                               [showMenu]="filter.rowFilterShowMenu"
@@ -232,7 +238,7 @@
                               [showOperator]="false"
                               [showAddButton]="false">
                 <ng-template pTemplate="header">
-                  <div class="px-3 pt-3 pb-0"><span class="font-bold">{{filter.header}}</span></div>
+                  <div class="filter-header"><span>{{filter.header}}</span></div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filterCallback="filterCallback" [ngSwitch]="filter.type">
                   <ng-input-text
@@ -430,23 +436,6 @@
     </ng-template>
     <ng-template pTemplate="summary" *ngIf="summaryTemplate">
       <ng-container *ngTemplateOutlet="summaryTemplate"></ng-container>
-      <!--      <p>non local paginator {{totalRecords}}</p>-->
-      <!--      <p-paginator-->
-      <!--        [totalRecords]="totalRecords"-->
-      <!--        [rows]="rows"-->
-      <!--        [first]="first || 1"-->
-      <!--        [rowsPerPageOptions]="rowsPerPageOptions"-->
-      <!--        [alwaysShow]="alwaysShowPaginator"-->
-      <!--        [showFirstLastIcon]="showFirstLastIcon"-->
-      <!--        [templateLeft]="paginatorLeftTemplate"-->
-      <!--        [templateRight]="paginatorRightTemplate"-->
-      <!--        [currentPageReportTemplate]="currentPageReportTemplate"-->
-      <!--        [showCurrentPageReport]="showCurrentPageReport"-->
-      <!--        [showJumpToPageDropdown]="showJumpToPageDropdown"-->
-      <!--        [showJumpToPageInput]="showJumpToPageInput"-->
-      <!--        [showPageLinks]="showPageLinks"-->
-      <!--        (onPageChange)="onPageChange($event)">-->
-      <!--      </p-paginator>-->
     </ng-template>
     <ng-template pTemplate="footer" *ngIf="footerTemplate">
       <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
@@ -457,7 +446,7 @@
       </ng-container>
       <ng-template #defaultEmptyMessage>
         <tr>
-          <td class="py-5"
+          <td class="empty-message-wrapper"
               [attr.colspan]="columns.length +
               (actionsConfig?.inSameColumn ? 1 : actionsConfig?.actions?.length) +
               (selectableRows && (selectionMode == 'checkbox' || selectionMode == 'radio') ? 1 : 0)">

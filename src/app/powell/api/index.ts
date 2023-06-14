@@ -1,3 +1,4 @@
+export * from './animate-on-scroll.service';
 export * from './config.provider';
 export * from './config.service';
 export * from './moment.service';

@@ -26,7 +26,8 @@ import {
   NgTablePaginationPosition,
   NgTableResponsiveLayout,
   NgTableRowGroupMode,
-  NgTableSortMode, NgTableStateStorage
+  NgTableSortMode,
+  NgTableStateStorage
 } from '@powell/models';
 import {TemplateDirective} from "@powell/directives/template";
 import {PrimeFilterMetadata, PrimeScrollerOptions, PrimeSortMeta} from "@powell/primeng/api";
@@ -87,7 +88,7 @@ export class TableComponent implements OnInit, AfterContentInit {
   @Input() groupRowsByOrder: number = 1;
   @Input() defaultSortOrder: number = 1;
   @Input() customSort: boolean;
-  @Input() showInitialSortBadge: boolean = true;
+  @Input() showInitialSortBadge: boolean;
   @Input() selectionMode: NgSelectionMode;
   @Input() selectionPageOnly: boolean;
   @Input() contextMenuSelectionMode: NgTableContextMenuSelectionMode = 'separate';
@@ -178,15 +179,38 @@ export class TableComponent implements OnInit, AfterContentInit {
   loadingBodyTemplate: TemplateRef<any>
   cellTemplates: { [key: string]: TemplateRef<any> } = {}
   loading: boolean;
+  activeSortField: string;
 
   ngOnInit() {
     this.onTableReady.emit(this.dataTable);
-    this.colDef = this.colDef.filter(col => col.visible != undefined ? col.visible : true);
+    this.colDef = this.colDef.filter(col => col.visible ?? true);
     this.colDef.forEach(conf => {
       if (conf.filter?.type == 'slider') {
         Object.assign(conf.filter, {sliderValue: conf.filter.range ? [conf.filter.min || 0, conf.filter.max || 100] : conf.filter.max})
       }
     })
+  }
+
+  _onSort(event: any) {
+    if (this.sortMode == 'multiple') {
+      if (event.multisortmeta?.length > 1) {
+        this.activeSortField = null;
+      } else {
+        this.activeSortField = event.multisortmeta?.map(sortMeta => sortMeta.field)[0];
+      }
+    } else {
+      this.activeSortField = event.field;
+    }
+    this.onSort.emit(event);
+  }
+
+  onResetSort(event: any) {
+    event.stopPropagation();
+    this.activeSortField = null;
+    this.dataTable.reset();
+    this.dataTable._sortOrder = 1;
+    this.dataTable._sortField = this.sortField || 'id';
+    this.dataTable.sortSingle();
   }
 
   ngAfterContentInit() {
@@ -302,14 +326,15 @@ export class TableComponent implements OnInit, AfterContentInit {
   }
 
   resolveFieldData(obj: any, field: string | string[], value?: any) {
-    if (typeof field == 'string')
+    if (typeof field == 'string') {
       return this.resolveFieldData(obj, field.split('.'), value);
-    else if (field.length == 1 && value !== undefined)
+    } else if (field.length == 1 && value !== undefined) {
       return obj[field[0]] = value;
-    else if (field.length == 0)
+    } else if (field.length == 0) {
       return obj;
-    else
+    } else {
       return this.resolveFieldData(obj[field[0]], field.slice(1), value);
+    }
   }
 
   onChangeFilterValue(event: any, filterCallback: Function, col: NgTableColDef) {
@@ -357,7 +382,7 @@ export class TableComponent implements OnInit, AfterContentInit {
     if (typeof action.visible == 'function')
       return action.visible(item);
     else {
-      return action.visible != undefined ? action.visible : true;
+      return action.visible ?? true;
     }
   }
 

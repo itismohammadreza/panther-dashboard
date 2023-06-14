@@ -1,0 +1,42 @@
+{
+  "models": [
+    {
+      "name": "User",
+      "path": "/home/ali/dev/panther/example/app/models.py",
+      "app": "app",
+      "index": 0
+    },
+    {
+      "name": "Admin",
+      "path": "/home/ali/dev/panther/example/app/models.py",
+      "app": "app",
+      "index": 1
+    },
+    {
+      "name": "Store",
+      "path": "/home/ali/dev/panther/example/store/models.py",
+      "app": "store",
+      "index": 2
+    },
+    {
+      "name": "Order",
+      "path": "/home/ali/dev/panther/example/store/models.py",
+      "app": "store",
+      "index": 3
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "first_name": "ali",
+      "last_name": "rn",
+      "age": 27
+    },
+    {
+      "id": 2,
+      "first_name": "mohammadreza",
+      "last_name": "sh",
+      "age": 67
+    }
+  ]
+}

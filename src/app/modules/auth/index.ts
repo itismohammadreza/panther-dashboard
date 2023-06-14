@@ -25,7 +25,3 @@ export const IMPORTS: Type<any>[] = [
   CommonModule,
   LogoComponent
 ];
-
-export const EXPORTS: Type<any>[] = [
-  ...DECLARATIONS
-];

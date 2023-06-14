@@ -62,8 +62,8 @@ export class FilePicker2Component implements OnInit, OnChanges, ControlValueAcce
   inputId: string;
   ngControl: NgControl;
   destroy$ = new Subject();
-  filesToShow: { display: string | ArrayBuffer, name: string }[] = [];
-  filesToEmit: any[] = [];
+  filesToShow: { display: string, name: string }[] = [];
+  filesToEmit: (string | ArrayBuffer | File)[] = [];
   _chooseLabel: string;
   onModelChange: any = (_: any) => {
   };
@@ -170,8 +170,45 @@ export class FilePicker2Component implements OnInit, OnChanges, ControlValueAcce
       this.filesToEmit.push(base64);
     } else if (this.resultType == 'file') {
       this.filesToEmit.push(item);
-    } else {
-      this.filesToEmit.push(item);
+    }
+  }
+
+  async b(item) {
+    let a: string | ArrayBuffer | File = item;
+    if(this.utilsService.isValidURL(item)){
+      a = await this.utilsService.urlToBase64(item);
+    }
+    if (item.indexOf('base64') == -1) {
+    }
+    const file = this.utilsService.base64toFile(a, item.split('/').pop());
+    let blobUrl = null;
+    if (this.utilsService.isImage(item)) {
+      blobUrl = window.URL.createObjectURL(new Blob([file], {type: file.type}));
+    }
+    this.filesToShow.push({display: blobUrl, name: file.name});
+
+    this.chooseLabel = file.name;
+
+    if (this.resultType == 'base64') {
+      this.filesToEmit.push(a);
+    } else if (this.resultType == 'file') {
+      this.filesToEmit.push(file);
+    }
+  }
+
+  async handleStringValue(item: string) {
+    let a: string | ArrayBuffer = item;
+    if (item.indexOf('base64') == -1) {
+      a = await this.utilsService.urlToBase64(item)
+    }
+    const file = this.utilsService.base64toFile(a, item.split('/').pop());
+    const blobUrl = window.URL.createObjectURL(new Blob([file], {type: file.type}));
+    this.filesToShow.push({display: blobUrl, name: file.name});
+
+    if (this.resultType == 'base64') {
+      this.filesToEmit.push(a);
+    } else if (this.resultType == 'file') {
+      this.filesToEmit.push(file);
     }
   }
 
@@ -182,31 +219,31 @@ export class FilePicker2Component implements OnInit, OnChanges, ControlValueAcce
     } else {
       return 'file';
     }
-  }
 
-  async handleStringValue(item: string) {
-    if (item.indexOf('base64') != -1) {
-      this.filesToShow.push({display: item, name: '--'});
-      if (this.resultType == 'base64') {
-        this.filesToEmit.push(item);
-      } else if (this.resultType == 'file') {
-        const file = this.utilsService.base64toFile(item, item.split('/').pop());
-        this.filesToEmit.push(file);
-      } else {
-        this.filesToEmit.push(item);
-      }
-    } else {
-      this.filesToShow.push({display: item, name: '--'});
-      const base64 = await this.utilsService.urlToBase64(item);
-      if (this.resultType == 'base64') {
-        this.filesToEmit.push(base64);
-      } else if (this.resultType == 'file') {
-        const file = this.utilsService.base64toFile(base64, item.split('/').pop())
-        this.filesToEmit.push(file);
-      } else {
-        this.filesToEmit.push(item);
-      }
-    }
+
+    // if (item.indexOf('base64') != -1) {
+    //   const file = this.utilsService.base64toFile(item, item.split('/').pop());
+    //   const blobUrl = window.URL.createObjectURL(new Blob([file], {type: file.type}));
+    //   this.filesToShow.push({display: blobUrl, name: file.name});
+    //
+    //   if (this.resultType == 'base64') {
+    //     this.filesToEmit.push(item);
+    //   } else if (this.resultType == 'file') {
+    //     this.filesToEmit.push(file);
+    //   }
+    // } else {
+    //   const base64 = await this.utilsService.urlToBase64(item);
+    //   const file = this.utilsService.base64toFile(base64, item.split('/').pop());
+    //   const blobUrl = window.URL.createObjectURL(new Blob([file], {type: file.type}));
+    //   this.filesToShow.push({display: blobUrl, name: file.name});
+    //
+    //   if (this.resultType == 'base64') {
+    //     this.filesToEmit.push(base64);
+    //   } else if (this.resultType == 'file') {
+    //     const file = this.utilsService.base64toFile(base64, item.split('/').pop())
+    //     this.filesToEmit.push(file);
+    //   }
+    // }
   }
 
   async init(value: any) {
