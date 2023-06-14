@@ -7,10 +7,12 @@ import {LoadingComponent} from "@modules/layout/loading/loading.component";
 import {LogoComponent} from "@modules/layout/logo/logo.component";
 import {NavbarMenuComponent} from "@modules/layout/navbar-menu/navbar-menu.component";
 import {DashboardPage} from "@modules/main/pages/dashboard/dashboard.page";
+import {ManagerPage} from "@modules/main/pages/manager/manager.page";
 
 export const DECLARATIONS: Type<any>[] = [
   MainPage,
-  DashboardPage
+  DashboardPage,
+  ManagerPage
 ];
 
 export const IMPORTS: Type<any>[] = [
