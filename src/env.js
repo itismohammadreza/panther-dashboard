@@ -1,4 +1,4 @@
 (function (window) {
   window.__env = window.__env || {};
-  window.__env.apiUrl = 'https://jsonplaceholder.typicode.com';
+  window.__env.apiUrl = '';
 }(this));
