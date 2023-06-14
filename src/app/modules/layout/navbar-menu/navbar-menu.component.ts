@@ -21,6 +21,7 @@ import {FilterModule} from "@powell/pipes/filter";
 import {TranslateModule} from "@ngx-translate/core";
 import {FormsModule} from "@angular/forms";
 import {LogoComponent} from "@modules/layout/logo/logo.component";
+import {DataService} from "@core/http";
 
 @Component({
   selector: 'ng-navbar-menu',
@@ -68,14 +69,6 @@ export class NavbarMenuComponent extends LanguageChecker implements OnInit, Afte
   themes: PrimeMenuItem[];
   sidebarTypes: PrimeMenuItem[];
   searchValue: string;
-  accountItems: PrimeMenuItem[] = [
-    {
-      label: 'خروج',
-      icon: 'pi pi-sign-out',
-      command: () => {
-      }
-    }
-  ];
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -89,7 +82,8 @@ export class NavbarMenuComponent extends LanguageChecker implements OnInit, Afte
 
   constructor(@Inject(DOCUMENT) private document: Document,
               private themeService: ThemeService,
-              private configService: ConfigService) {
+              private configService: ConfigService,
+              private dataService: DataService) {
     super();
   }
 
@@ -112,68 +106,16 @@ export class NavbarMenuComponent extends LanguageChecker implements OnInit, Afte
     }
   }
 
-  loadData() {
+  async loadData() {
     const themes: string[] = this.themeService.getAllThemes();
     const sidebarTypes: SidebarType[] = ['overlay', 'overlay-mask', 'push', 'push-mask', 'hover', 'static', 'horizontal'];
-    const sidebarItems: string[] = [
-      'dashboard',
-      'animate-on-scroll',
-      'auto-complete',
-      'bottom-sheet',
-      'button',
-      'cascade-select',
-      'checkbox',
-      'chips',
-      'color-picker',
-      'confirm-dialog',
-      'confirm-popup',
-      'dialog',
-      'dialog-form',
-      'dropdown',
-      'dual-label-switch',
-      'editor',
-      'empty',
-      'file-picker',
-      'file-picker2',
-      'gregorian-datepicker',
-      'image',
-      'image-slider',
-      'infinite-scroll',
-      'input-mask',
-      'input-number',
-      'input-otp',
-      'input-password',
-      'input-text',
-      'input-textarea',
-      'iran-map',
-      'jalali-datepicker',
-      'knob',
-      'listbox',
-      'loading-container',
-      'map',
-      'message',
-      'multi-checkbox',
-      'multi-select',
-      'radio',
-      'rating',
-      'select-button',
-      'slider',
-      'split-button',
-      'status',
-      'switch',
-      'table',
-      'toast',
-      'toggle-button',
-      'tree',
-      'tree-select',
-      'tri-state-checkbox',
-      'utils',
-    ];
+    const sidebarItems = await this.dataService.getModels();
+    console.log(sidebarItems)
     this.themes = themes.map((t, i) => ({label: t, value: t}));
     this.sidebarTypes = sidebarTypes.map((t) => ({label: t, value: t}));
-    this.sidebarItems = sidebarItems.map(item => ({
-      label: item,
-      routerLink: `showcase/${item}`,
+    this.sidebarItems = sidebarItems.models.map(item => ({
+      label: item.name,
+      routerLink: `/models/${item.name.toLowerCase()}`,
       icon: 'pi pi-minus',
       command: () => {
         if (!this.sidebarLock && this.isModalSidebar) {

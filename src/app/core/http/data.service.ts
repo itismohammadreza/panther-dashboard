@@ -12,13 +12,8 @@ export class DataService extends ApiService {
     super();
   }
 
-  get() {
-    const res = this._get<any>(this.endpoint, {params: {_start: 0, _limit: 20}});
-    return lastValueFrom(res);
-  }
-
-  getCustomers(filters?: any) {
-    const res = this._customRequest<any>('https://www.primefaces.org/data/customers', 'GET', null, {params: filters});
+  getModels() {
+    const res = this._get<any>('assets/db.json');
     return lastValueFrom(res);
   }
 }
