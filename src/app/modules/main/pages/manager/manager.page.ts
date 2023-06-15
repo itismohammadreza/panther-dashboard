@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "@core/http";
 import {ActivatedRoute} from "@angular/router";
+import {NgTableColDef} from "@powell/models";
+import {ModelItem} from "@core/models/data.models";
 
 @Component({
   selector: 'ng-manager',
@@ -12,9 +14,20 @@ export class ManagerPage implements OnInit {
               private route: ActivatedRoute) {
   }
 
-  ngOnInit() {
-  }
+  tableData: ModelItem[] = [];
+  colDef: NgTableColDef<ModelItem>[] = [
+    {field: 'id', header: 'ID'},
+    {field: 'first_name', header: 'First Name'},
+    {field: 'last_name', header: 'Last Name'},
+    {field: 'age', header: 'Age'},
+  ]
 
-  async loadData() {
+  ngOnInit() {
+    this.route.params.subscribe(({modelName}) => {
+      const loadData = async () => {
+        this.tableData = await this.dataService.getItems(modelName);
+      }
+      loadData()
+    });
   }
 }
