@@ -88,11 +88,11 @@ export class NavbarMenuComponent extends LanguageChecker implements OnInit, Afte
   }
 
   ngOnInit() {
-    this.loadData();
     this.tempSidebarType = this.sidebarType;
     if (this.sidebarLock && !this.sidebarVisible) {
       this.sidebarVisible = true;
     }
+    this.loadData();
   }
 
   ngAfterViewChecked() {
@@ -110,12 +110,11 @@ export class NavbarMenuComponent extends LanguageChecker implements OnInit, Afte
     const themes: string[] = this.themeService.getAllThemes();
     const sidebarTypes: SidebarType[] = ['overlay', 'overlay-mask', 'push', 'push-mask', 'hover', 'static', 'horizontal'];
     const sidebarItems = await this.dataService.getModels();
-    console.log(sidebarItems)
-    this.themes = themes.map((t, i) => ({label: t, value: t}));
+    this.themes = themes.map(t => ({label: t, value: t}));
     this.sidebarTypes = sidebarTypes.map((t) => ({label: t, value: t}));
-    this.sidebarItems = sidebarItems.models.map(item => ({
+    this.sidebarItems = sidebarItems.map(item => ({
       label: item.name,
-      routerLink: `/models/${item.name.toLowerCase()}`,
+      routerLink: `/models/${item.name}`,
       icon: 'pi pi-minus',
       command: () => {
         if (!this.sidebarLock && this.isModalSidebar) {
