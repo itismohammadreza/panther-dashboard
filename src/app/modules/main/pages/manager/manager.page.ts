@@ -16,9 +16,11 @@ export class ManagerPage implements OnInit {
 
   tableData: TestModelItem[] = [];
   colDef: NgTableColDef<TestModelItem>[] = [];
+  modelName: string;
 
   ngOnInit() {
     this.route.params.subscribe(({modelName}) => {
+      this.modelName = modelName;
       const loadData = async () => {
         const {data, fields} = await this.dataService.getItems(modelName);
         this.generateTableColDef(fields);
