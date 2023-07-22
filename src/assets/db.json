@@ -26,61 +26,74 @@
     }
   ],
   "items": {
-    "User": [
-      {
-        "id": 1,
-        "first_name": "ali User",
-        "last_name": "rn",
-        "age": 27
+    "User": {
+      "fields": {
+        "id": "str",
+        "first_name": "str",
+        "last_name": "str",
+        "age": "str"
       },
-      {
-        "id": 2,
-        "first_name": "mohammadreza User",
-        "last_name": "sh",
-        "age": 67
-      }
-    ],
-    "Admin": [
-      {
-        "id": 1,
-        "first_name": "ali Admin",
-        "last_name": "rn",
-        "age": 27
+      "data": [
+        {
+          "id": 1,
+          "first_name": "ali User",
+          "last_name": "rn",
+          "age": 27
+        },
+        {
+          "id": 2,
+          "first_name": "mohammadreza User",
+          "last_name": "sh",
+          "age": 67
+        }
+      ]
+    },
+    "Admin": {
+      "fields": {
+        "id": "str",
+        "first_name": "str",
+        "last_name": "str",
+        "age": "str"
       },
-      {
-        "id": 2,
-        "first_name": "mohammadreza Admin",
-        "last_name": "sh",
-        "age": 67
-      }
-    ],
-    "Store": [
-      {
-        "id": 1,
-        "first_name": "ali Store",
-        "last_name": "rn",
-        "age": 27
+      "data": []
+    },
+    "Store": {
+      "fields": {
+        "id": "str",
+        "first_name": "str",
+        "last_name": "str",
+        "age": "str"
       },
-      {
-        "id": 2,
-        "first_name": "mohammadreza Store",
-        "last_name": "sh",
-        "age": 67
-      }
-    ],
-    "Order": [
-      {
-        "id": 1,
-        "first_name": "ali Order",
-        "last_name": "rn",
-        "age": 27
+      "data": [
+        {
+          "id": 1,
+          "first_name": "ali Store",
+          "last_name": "rn",
+          "age": 27
+        },
+        {
+          "id": 2,
+          "first_name": "mohammadreza Store",
+          "last_name": "sh",
+          "age": 67
+        }
+      ]
+    },
+    "Order": {
+      "fields": {
+        "id": "str",
+        "first_name": "str",
+        "last_name": "str",
+        "age": "str"
       },
-      {
-        "id": 2,
-        "first_name": "mohammadreza Order",
-        "last_name": "sh",
-        "age": 67
-      }
-    ]
+      "data": [
+        {
+          "id": 1,
+          "first_name": "ali Order",
+          "last_name": "rn",
+          "age": 27
+        }
+      ]
+    }
   }
 }
