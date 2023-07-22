@@ -111,7 +111,7 @@ export class OverlayService {
     return dialogRef;
   }
 
-  showToast(options: NgToastOptions): Promise<boolean> {
+  showToast(options: NgToastOptions) {
     if (!this.bodyContains(this.toastCmpRef)) {
       this.toastCmpRef = this.addToBody(PrimeToast);
     }
@@ -139,12 +139,12 @@ export class OverlayService {
         subscription.unsubscribe();
         setTimeout(() => {
           accept(true);
-        }, 1)
+        }, 5)
       });
     });
   }
 
-  showConfirmPopup(options: NgConfirmPopupOptions): Promise<boolean> {
+  showConfirmPopup(options: NgConfirmPopupOptions) {
     if (!this.bodyContains(this.confirmPopupCmpRef)) {
       this.confirmPopupCmpRef = this.addToBody(PrimeConfirmPopup);
     }
@@ -163,7 +163,7 @@ export class OverlayService {
     instance.baseZIndex = options.baseZIndex ?? this.configService.getConfig().zIndex.modal;
     instance.style = options.style;
     instance.styleClass = `${options.styleClass} ${(options.rtl ?? this.configService.getConfig().rtl) ? 'rtl' : 'ltr'} p-confirm-popup-button-icon-${options.buttonIconPos || 'left'}`;
-    return new Promise((accept) => {
+    return new Promise<boolean>((accept) => {
       const state: NgHistoryState = {component: 'confirmPopup'};
       this.pushState(state)
       this.confirmationService.confirm({
@@ -172,19 +172,19 @@ export class OverlayService {
           this.popState();
           setTimeout(() => {
             accept(true);
-          }, 1)
+          }, 5)
         },
         reject: () => {
           this.popState();
           setTimeout(() => {
             accept(false);
-          }, 1)
+          }, 5)
         },
       });
     });
   }
 
-  showConfirmDialog(options: NgConfirmDialogOptions): Promise<boolean | null> {
+  showConfirmDialog(options: NgConfirmDialogOptions) {
     if (!this.bodyContains(this.confirmCmpRef)) {
       this.confirmCmpRef = this.addToBody(PrimeConfirmDialog);
     }
@@ -205,7 +205,7 @@ export class OverlayService {
     instance.autoZIndex = options.autoZIndex ?? true;
     instance.breakpoints = options.breakpoints;
     instance.transitionOptions = options.transitionOptions || '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
-    return new Promise((accept) => {
+    return new Promise<boolean>((accept) => {
       const state: NgHistoryState = {component: 'confirmDialog'};
       this.pushState(state)
       this.confirmationService.confirm({
@@ -214,7 +214,7 @@ export class OverlayService {
           this.popState();
           setTimeout(() => {
             accept(true);
-          }, 1)
+          }, 5)
         },
         reject: (type: PrimeConfirmEventType) => {
           this.popState();
@@ -222,12 +222,12 @@ export class OverlayService {
             case PrimeConfirmEventType.REJECT:
               setTimeout(() => {
                 accept(false);
-              }, 1)
+              }, 5)
               break;
             case PrimeConfirmEventType.CANCEL:
               setTimeout(() => {
                 accept(null);
-              }, 1)
+              }, 5)
               break;
           }
         }
@@ -235,7 +235,7 @@ export class OverlayService {
     })
   }
 
-  showDialog(options: NgDialogOptions): Promise<void> {
+  showDialog(options: NgDialogOptions) {
     if (!this.bodyContains(this.dialogCmpRef)) {
       this.dialogCmpRef = this.addToBody(DialogComponent);
     }
@@ -257,20 +257,20 @@ export class OverlayService {
     instance.show();
     const state: NgHistoryState = {component: 'dialog'};
     this.pushState(state);
-    return new Promise((accept) => {
-      const subscription = this.dialogCmpRef.instance.onClose.subscribe(() => {
+    return new Promise<void>((accept) => {
+      const subscription = instance.onClose.subscribe(() => {
         if (!this.isPopped(state)) {
           this.popState()
         }
         subscription.unsubscribe();
         setTimeout(() => {
           accept();
-        }, 1)
+        }, 5)
       });
     });
   }
 
-  showDialogForm(config: NgDialogFormConfig[], options: NgDialogFormOptions = {}): Observable<NgDialogFormResult> {
+  showDialogForm(config: NgDialogFormConfig[], options: NgDialogFormOptions = {}) {
     if (!this.bodyContains(this.dialogFormCmpRef)) {
       this.dialogFormCmpRef = this.addToBody(DialogFormComponent);
     }
@@ -330,7 +330,7 @@ export class OverlayService {
     })
   }
 
-  private addToBody<T>(component: Type<T>, injector: Injector = this.injector): ComponentRef<T> {
+  private addToBody<T>(component: Type<T>, injector: Injector = this.injector) {
     const componentRef = createComponent(component, {
       environmentInjector: this.appRef.injector,
       elementInjector: injector

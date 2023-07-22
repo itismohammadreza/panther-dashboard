@@ -1,10 +1,11 @@
-import {NgButtonAppearance, NgColor, NgFilterMatchMode, NgIconPosition, NgSize} from '@powell/models';
+import {NgButtonAppearance, NgColor, NgFilterMatchMode, NgIconPosition, NgPosition, NgSize} from '@powell/models';
 
 export type NgTableRendererType = 'text' | 'image' | 'ng-template';
 export type NgTableFilterDisplay = 'row' | 'menu';
 export type NgTableResponsiveLayout = 'stack' | 'scroll';
 export type NgTablePaginationPosition = 'bottom' | 'top' | 'both';
 export type NgTableSortMode = 'single' | 'multiple';
+export type NgTableRowExpandMode = 'single' | 'multiple';
 export type NgTableRowGroupMode = 'subheader' | 'rowspan';
 export type NgTableContextMenuSelectionMode = 'separate' | 'joint';
 export type NgTableCompareSelectionBy = 'equals' | 'deepEquals';
@@ -50,6 +51,7 @@ export interface NgTableColDef<T = any> {
   filter?: NgTableFilter;
   render?: NgTableRender<T>;
   cellStyleClass?: string | ((item: T) => string);
+  cellStyle?: any | ((item: T) => any);
   visible?: boolean;
 }
 
@@ -62,6 +64,7 @@ export interface NgTableActionsConfig<T = any> {
 export interface NgTableAction<T = any> {
   header?: string;
   tooltip?: string;
+  tooltipPosition?: NgPosition;
   icon?: string;
   label?: string;
   color?: NgColor;
@@ -70,7 +73,9 @@ export interface NgTableAction<T = any> {
   iconPos?: NgIconPosition;
   rounded?: boolean;
   full?: boolean;
+  async?: boolean;
   size?: NgSize;
   visible?: boolean | ((item: T) => boolean);
-  onClick?: (item: T) => void;
+  onClick?: (item: T, index: number) => void;
+  onClickAsync?: (callback: VoidFunction, item: T, index: number) => void;
 }

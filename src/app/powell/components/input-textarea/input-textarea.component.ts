@@ -112,7 +112,7 @@ export class InputTextareaComponent implements OnInit, ControlValueAccessor, OnD
     }
   }
 
-  _onResize(event: Event) {
+  _onResize(event: any) {
     this.onResize.emit(event);
   }
 

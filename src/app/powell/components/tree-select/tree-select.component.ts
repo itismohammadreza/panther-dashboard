@@ -29,7 +29,7 @@ import {
   NgChipDisplayMode,
   NgIconPosition,
   NgLabelPosition,
-  NgSelectionMode,
+  NgTreeSelectionMode,
   NgSize,
   NgTreeFilterMode,
   NgValidation
@@ -69,7 +69,7 @@ export class TreeSelectComponent implements OnInit, AfterContentInit, ControlVal
   @Input() placeholder: string;
   @Input() disabled: boolean;
   @Input() tabindex: string;
-  @Input() selectionMode: NgSelectionMode;
+  @Input() selectionMode: NgTreeSelectionMode;
   @Input() panelClass: string;
   @Input() appendTo: any;
   @Input() emptyMessage: string;

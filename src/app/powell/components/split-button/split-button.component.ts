@@ -31,7 +31,7 @@ export class SplitButtonComponent implements AfterContentInit {
   @Input() label: string;
   @Input() icon: string;
   @Input() iconPos: NgIconPosition;
-  @Input() style: string;
+  @Input() style: any;
   @Input() styleClass: string;
   @Input() menuStyle: string;
   @Input() menuStyleClass: string;

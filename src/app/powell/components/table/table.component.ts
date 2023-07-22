@@ -14,7 +14,6 @@ import {
 import {
   NgEmptyIcon,
   NgOrientation,
-  NgSelectionMode,
   NgSize,
   NgTableAction,
   NgTableActionsConfig,
@@ -25,7 +24,9 @@ import {
   NgTableFilterDisplay,
   NgTablePaginationPosition,
   NgTableResponsiveLayout,
+  NgTableRowExpandMode,
   NgTableRowGroupMode,
+  NgTableSelectionMode,
   NgTableSortMode,
   NgTableStateStorage
 } from '@powell/models';
@@ -37,12 +38,11 @@ import {PrimeTable} from "@powell/primeng";
   selector: 'ng-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements OnInit, AfterContentInit {
-  @Input() items: any[];
+  @Input({required: true}) items: any[];
   @Input() filterDisplay: NgTableFilterDisplay = 'menu';
-  @Input() colDef: NgTableColDef[];
+  @Input({required: true}) colDef: NgTableColDef[];
   @Input() reorderableRows: boolean;
   @Input() selectableRows: boolean;
   @Input() actionsConfig: NgTableActionsConfig;
@@ -89,7 +89,7 @@ export class TableComponent implements OnInit, AfterContentInit {
   @Input() defaultSortOrder: number = 1;
   @Input() customSort: boolean;
   @Input() showInitialSortBadge: boolean;
-  @Input() selectionMode: NgSelectionMode;
+  @Input() selectionMode: NgTableSelectionMode;
   @Input() selectionPageOnly: boolean;
   @Input() contextMenuSelectionMode: NgTableContextMenuSelectionMode = 'separate';
   @Input() dataKey: string;
@@ -106,7 +106,7 @@ export class TableComponent implements OnInit, AfterContentInit {
   @Input() globalFilterFields: string[];
   @Input() filterLocale: string;
   @Input() expandedRowKeys: { [s: string]: boolean; } = {};
-  @Input() rowExpandMode: string = 'multiple';
+  @Input() rowExpandMode: NgTableRowExpandMode = 'multiple';
   @Input() scrollable: boolean;
   @Input() scrollDirection: NgOrientation = "vertical";
   @Input() scrollHeight: string;
@@ -183,6 +183,7 @@ export class TableComponent implements OnInit, AfterContentInit {
 
   ngOnInit() {
     this.onTableReady.emit(this.dataTable);
+    this.actionsConfig.actions = this.actionsConfig?.actions.filter(action => action.visible) || [];
     this.colDef = this.colDef.filter(col => col.visible ?? true);
     this.colDef.forEach(conf => {
       if (conf.filter?.type == 'slider') {
@@ -370,6 +371,14 @@ export class TableComponent implements OnInit, AfterContentInit {
     }
   }
 
+  handleCellStyle(cellStyle: Function | any, item: any) {
+    if (typeof cellStyle == 'function')
+      return cellStyle(item);
+    else {
+      return cellStyle
+    }
+  }
+
   handleCellRenderer(col: NgTableColDef, item: any) {
     if (col.render && typeof col.render.as == 'function')
       return col.render.as(item);
@@ -390,7 +399,10 @@ export class TableComponent implements OnInit, AfterContentInit {
     this.dataTable.filterGlobal(event.target.value, 'contains')
   }
 
-  removeLoading = () => {
+  removeLoading = (ok: boolean = true) => {
     this.loading = false
+    if (!ok) {
+      this.activeSortField = null
+    }
   }
 }

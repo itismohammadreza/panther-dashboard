@@ -40,7 +40,7 @@
            [defaultSortOrder]="defaultSortOrder"
            [customSort]="customSort"
            [showInitialSortBadge]="showInitialSortBadge"
-           [selectionMode]="selectionMode"
+           [selectionMode]="$any(selectionMode)"
            [selectionPageOnly]="selectionPageOnly"
            [contextMenuSelectionMode]="contextMenuSelectionMode"
            [dataKey]="dataKey"
@@ -121,12 +121,14 @@
               [pReorderableColumnDisabled]="!reorderableColumns">
             {{ col.header }}
             <p-sortIcon *ngIf="col.sort" [field]="col.field"></p-sortIcon>
-            <ng-button [rounded]="true"
-                       *ngIf="activeSortField == col.field"
-                       appearance="text"
-                       size="sm"
-                       icon="pi pi-sort-alt-slash"
-                       (onClick)="onResetSort($event)">
+            <ng-button
+              class="sort-reset"
+              [rounded]="true"
+              *ngIf="col.sort && activeSortField == col.field"
+              appearance="text"
+              size="sm"
+              icon="pi pi-sort-alt-slash"
+              (onClick)="onResetSort($event)">
             </ng-button>
             <ng-container *ngIf="col.filter as filter">
               <p-columnFilter [field]="col.field"
@@ -197,11 +199,13 @@
               </p-columnFilter>
             </ng-container>
           </th>
-          <ng-container *ngIf="actionsConfig && actionsConfig.inSameColumn">
-            <th>{{actionsConfig.header}}</th>
+          <ng-container *ngIf="actionsConfig?.inSameColumn && actionsConfig?.actions.length">
+            <th class="text-center">{{actionsConfig.header}}</th>
           </ng-container>
-          <ng-container *ngIf="actionsConfig && !actionsConfig.inSameColumn">
-            <th class="text-center" *ngFor="let action of actionsConfig.actions">{{action.header}}</th>
+          <ng-container *ngIf="!actionsConfig?.inSameColumn && actionsConfig?.actions.length">
+            <ng-container *ngFor="let action of actionsConfig?.actions">
+              <th class="text-center" *ngIf="action.visible">{{action.header}}</th>
+            </ng-container>
           </ng-container>
         </tr>
       </ng-container>
@@ -218,11 +222,13 @@
             {{ col.header }}
             <p-sortIcon *ngIf="col.sort" [field]="col.field"></p-sortIcon>
           </th>
-          <ng-container *ngIf="actionsConfig && actionsConfig.inSameColumn">
+          <ng-container *ngIf="actionsConfig?.inSameColumn && actionsConfig?.actions.length">
             <th>{{actionsConfig.header}}</th>
           </ng-container>
-          <ng-container *ngIf="actionsConfig && !actionsConfig.inSameColumn">
-            <th class="text-center" *ngFor="let action of actionsConfig.actions">{{action.header}}</th>
+          <ng-container *ngIf="!actionsConfig?.inSameColumn && actionsConfig?.actions.length">
+            <ng-container *ngFor="let action of actionsConfig?.actions">
+              <th class="text-center" *ngIf="action.visible">{{action.header}}</th>
+            </ng-container>
           </ng-container>
         </tr>
         <tr>
@@ -327,7 +333,9 @@
           <td *ngIf="selectionMode == 'checkbox'">
             <p-tableCheckbox [value]="item"></p-tableCheckbox>
           </td>
-          <td *ngFor="let col of colDef" [ngClass]="handleCellStyleClass(col.cellStyleClass,item)">
+          <td *ngFor="let col of colDef"
+              [ngClass]="handleCellStyleClass(col.cellStyleClass,item)"
+              [ngStyle]="handleCellStyle(col.cellStyle,item)">
             <ng-container [ngSwitch]="col.render?.as">
               <ng-image
                 *ngSwitchCase="'image'"
@@ -356,12 +364,15 @@
                     [appearance]="action.appearance"
                     [iconPos]="action.iconPos"
                     [rounded]="action.rounded"
+                    [async]="action.async"
                     [full]="action.full"
                     [styleClass]="action.styleClass"
                     [color]="action.color"
                     [size]="action.size"
                     [pTooltip]="action.tooltip"
-                    (onClick)="action.onClick(item)">
+                    [tooltipPosition]="action.tooltipPosition ?? 'top'"
+                    (onClick)="action.onClick(item,index)"
+                    (onClickAsync)="action.onClickAsync($event,item,index)">
                   </ng-button>
                 </ng-container>
               </div>
@@ -376,12 +387,15 @@
                 [appearance]="action.appearance"
                 [iconPos]="action.iconPos"
                 [rounded]="action.rounded"
+                [async]="action.async"
                 [full]="action.full"
                 [styleClass]="action.styleClass"
                 [color]="action.color"
                 [size]="action.size"
                 [pTooltip]="action.tooltip"
-                (onClick)="action.onClick(item)">
+                [tooltipPosition]="action.tooltipPosition ?? 'top'"
+                (onClick)="action.onClick(item,index)"
+                (onClickAsync)="action.onClickAsync($event,item,index)">
               </ng-button>
             </td>
           </ng-container>

@@ -29,7 +29,7 @@ import {
   NgAddon,
   NgFixLabelPosition,
   NgOrientation,
-  NgSelectionMode,
+  NgTreeSelectionMode,
   NgTreeFilterMode,
   NgValidation
 } from '@powell/models';
@@ -60,9 +60,9 @@ export class TreeComponent implements OnInit, AfterContentInit, ControlValueAcce
   @Input() disableConfigChangeEffect: boolean;
   // native properties
   @Input() items: any[];
-  @Input() selectionMode: NgSelectionMode;
+  @Input() selectionMode: NgTreeSelectionMode;
   @Input() selection: any;
-  @Input() style: string;
+  @Input() style: any;
   @Input() styleClass: string;
   @Input() contextMenu: PrimeContextMenu;
   @Input() layout: NgOrientation = 'vertical';

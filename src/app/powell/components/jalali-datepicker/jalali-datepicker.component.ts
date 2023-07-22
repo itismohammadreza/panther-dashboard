@@ -63,7 +63,7 @@ export class JalaliDatepickerComponent implements OnInit, ControlValueAccessor, 
   // native properties
   @Input() defaultDate: Moment;
   @Input() selectionMode: NgDatepickerSelectionMode = 'single';
-  @Input() style: string;
+  @Input() style: any;
   @Input() styleClass: string;
   @Input() inputStyle: string;
   @Input() inputStyleClass: string;
