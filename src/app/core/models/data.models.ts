@@ -1,3 +1,13 @@
+export interface DatabaseItem<T> {
+  fields: { [x in keyof T]: T[x] },
+  data: T[]
+}
+
+export interface Database {
+  models: DataModel[],
+  items: any
+}
+
 export interface DataModel {
   name: string;
   path: string;
@@ -5,7 +15,7 @@ export interface DataModel {
   index: string;
 }
 
-export interface ModelItem {
+export interface TestModelItem {
   id: number;
   first_name: string;
   last_name: string;

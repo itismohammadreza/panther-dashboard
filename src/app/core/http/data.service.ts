@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {lastValueFrom} from "rxjs";
 import {ApiService} from '@core/http';
-import {DataModel, ModelItem} from "@core/models/data.models";
+import {Database, DatabaseItem, DataModel, TestModelItem} from "@core/models/data.models";
 import {map} from "rxjs/operators";
 
 @Injectable({
@@ -15,14 +15,14 @@ export class DataService extends ApiService {
   }
 
   getModels() {
-    const db = this._get<any>('assets/db.json');
+    const db = this._get<Database>('assets/db.json');
     const res = db.pipe(map(x => x.models));
-    return lastValueFrom<DataModel[]>(res);
+    return lastValueFrom(res);
   }
 
   getItems(model: string) {
-    const db = this._get<any>('assets/db.json');
-    const res = db.pipe(map(x => x.items[model]));
-    return lastValueFrom<ModelItem[]>(res);
+    const db = this._get<Database>('assets/db.json');
+    const res = db.pipe(map(x => x.items[model] as DatabaseItem<TestModelItem>));
+    return lastValueFrom(res);
   }
 }
