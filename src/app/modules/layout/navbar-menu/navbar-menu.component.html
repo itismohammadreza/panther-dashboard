@@ -144,12 +144,4 @@
     [value]="config.ripple"
     (onChange)="changeGlobalConfig('ripple',$event.checked)">
   </ng-switch>
-  <ng-switch
-    [label]="'rtl' | translate"
-    labelPos="fix-side"
-    [labelWidth]="170"
-    class="d-block mb-4"
-    [value]="config.rtl"
-    (onChange)="changeGlobalConfig('rtl',$event.checked)">
-  </ng-switch>
 </p-sidebar>
