@@ -1,4 +1,4 @@
-export interface DatabaseItem<T> {
+export interface DatabaseRecord<T> {
   fields: { [x in keyof T]: T[x] },
   data: T[]
 }
@@ -12,12 +12,5 @@ export interface DataModel {
   name: string;
   path: string;
   app: string;
-  index: string;
-}
-
-export interface TestModelItem {
-  id: number;
-  first_name: string;
-  last_name: string;
-  age: number;
+  index: number;
 }

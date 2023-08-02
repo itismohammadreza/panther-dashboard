@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "@core/http";
 import {ActivatedRoute} from "@angular/router";
-import {NgTableColDef} from "@powell/models";
-import {TestModelItem} from "@core/models/data.models";
+import {NgTableAction, NgTableColDef} from "@powell/models";
+import {OverlayService} from "@powell/api";
 
 @Component({
   selector: 'ng-manager',
@@ -11,18 +11,38 @@ import {TestModelItem} from "@core/models/data.models";
 })
 export class ManagerPage implements OnInit {
   constructor(private dataService: DataService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private overlayService: OverlayService) {
   }
 
-  tableData: TestModelItem[] = [];
-  colDef: NgTableColDef<TestModelItem>[] = [];
-  modelName: string;
+  currentModelIndex: number;
+  currentRecord: any;
+  dialogVisible: boolean;
+  tableData: any[] = [];
+  colDef: NgTableColDef<any>[] = [];
+  tableActions: NgTableAction[] = [
+    {
+      header: 'Delete',
+      icon: 'pi pi-trash',
+      onClick: (item, index) => {
+        this.deleteRecord(item, index);
+      }
+    },
+    {
+      header: 'Show',
+      icon: 'pi pi-info',
+      onClick: async (item) => {
+        this.currentRecord = await this.dataService.getRecordById(this.currentModelIndex, item.id);
+        this.dialogVisible = true;
+      }
+    }
+  ];
 
   ngOnInit() {
-    this.route.params.subscribe(({modelName}) => {
-      this.modelName = modelName;
+    this.route.params.subscribe(({index}) => {
+      this.currentModelIndex = index;
       const loadData = async () => {
-        const {data, fields} = await this.dataService.getItems(modelName);
+        const {data, fields} = await this.dataService.getRecords(index);
         this.generateTableColDef(fields);
         this.tableData = data;
       }
@@ -35,5 +55,17 @@ export class ManagerPage implements OnInit {
     Object.keys(fields).forEach(f => {
       this.colDef.push({field: f, header: f})
     })
+  }
+
+  async deleteRecord(item, index) {
+    const dialogRes = await this.overlayService.showConfirmDialog({
+      header: 'Delete',
+      message: 'Are you sure to delete this record?'
+    });
+    if (dialogRes) {
+      await this.dataService.deleteRecord(this.currentModelIndex, item.id);
+      const idx = this.tableData.findIndex(data => data.id === item.id);
+      this.tableData.splice(idx, 1)
+    }
   }
 }

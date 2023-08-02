@@ -114,7 +114,7 @@ export class NavbarMenuComponent extends LanguageChecker implements OnInit, Afte
     this.sidebarTypes = sidebarTypes.map((t) => ({label: t, value: t}));
     this.sidebarItems = sidebarItems.map(item => ({
       label: item.name,
-      routerLink: `/models/${item.name}`,
+      routerLink: `/models/${item.index}`,
       icon: 'pi pi-minus',
       command: () => {
         if (!this.sidebarLock && this.isModalSidebar) {

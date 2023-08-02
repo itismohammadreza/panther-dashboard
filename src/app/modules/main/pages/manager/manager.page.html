@@ -3,9 +3,13 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <ng-table [header]="modelName" [items]="tableData" [colDef]="colDef"></ng-table>
+          <ng-table [items]="tableData" [actionsConfig]="tableActions" [colDef]="colDef"></ng-table>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<p-dialog [(visible)]="dialogVisible">
+  {{currentRecord | json}}
+</p-dialog>

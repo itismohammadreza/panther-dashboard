@@ -10,7 +10,7 @@ const routes: Routes = [
     component: MainPage,
     children: [
       {
-        path: 'models/:modelName',
+        path: 'models/:index',
         title: 'manage',
         component: ManagerPage
       },
