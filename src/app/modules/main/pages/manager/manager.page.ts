@@ -29,7 +29,9 @@ export class ManagerPage implements OnInit {
     actions: [
       {
         header: 'Delete',
+        visible: true,
         icon: 'pi pi-trash',
+        color: 'danger',
         onClick: (item, index) => {
           this.deleteModelData(item, index);
         }
@@ -37,6 +39,7 @@ export class ManagerPage implements OnInit {
       {
         header: 'Show',
         icon: 'pi pi-info',
+        visible: true,
         onClick: async (item) => {
           this.modelData = await this.dataService.getModelDataById(this.modelIndex, item.id);
           this.dialogVisible = true;
