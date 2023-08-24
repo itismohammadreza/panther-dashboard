@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "@core/http";
 import {ActivatedRoute} from "@angular/router";
-import {NgTableAction, NgTableColDef} from "@powell/models";
+import {NgTableAction, NgTableActionsConfig, NgTableColDef} from "@powell/models";
 import {OverlayService} from "@powell/api";
 
 @Component({
@@ -20,23 +20,27 @@ export class ManagerPage implements OnInit {
   dialogVisible: boolean;
   tableData: any[] = [];
   colDef: NgTableColDef<any>[] = [];
-  tableActions: NgTableAction[] = [
-    {
-      header: 'Delete',
-      icon: 'pi pi-trash',
-      onClick: (item, index) => {
-        this.deleteRecord(item, index);
+  tableActions: NgTableActionsConfig = {
+    header: "Actions",
+    inSameColumn: false,
+    actions: [
+      {
+        header: 'Delete',
+        icon: 'pi pi-trash',
+        onClick: (item, index) => {
+          this.deleteRecord(item, index);
+        }
+      },
+      {
+        header: 'Show',
+        icon: 'pi pi-info',
+        onClick: async (item) => {
+          this.currentRecord = await this.dataService.getRecordById(this.currentModelIndex, item.id);
+          this.dialogVisible = true;
+        }
       }
-    },
-    {
-      header: 'Show',
-      icon: 'pi pi-info',
-      onClick: async (item) => {
-        this.currentRecord = await this.dataService.getRecordById(this.currentModelIndex, item.id);
-        this.dialogVisible = true;
-      }
-    }
-  ];
+    ]
+  }
 
   ngOnInit() {
     this.route.params.subscribe(({index}) => {

@@ -30,7 +30,9 @@ export class HttpHandlerInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const clonedReq = request.clone();
+    const clonedReq = request.clone({
+      url: `${request.url}/`
+    });
     const shouldShowSuccess = this.isRequestFounded(this.hasSuccessMessageApis, request);
     const shouldShowFailure = this.isRequestFounded(this.hasFailureMessageApis, request);
     const shouldShowLoading = this.isRequestFounded(this.hasLoadingApis, request);

@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {lastValueFrom} from "rxjs";
 import {ApiService} from '@core/http';
-import {Database, DatabaseRecord, DataModel} from "@core/models/data.models";
-import {map} from "rxjs/operators";
+import {DatabaseRecord, DataModel} from "@core/models/data.models";
 
 @Injectable({
   providedIn: 'root'
