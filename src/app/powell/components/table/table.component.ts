@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   EventEmitter,
@@ -12,6 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  NgAsyncEvent,
   NgEmptyIcon,
   NgOrientation,
   NgSize,
@@ -31,8 +31,30 @@ import {
   NgTableStateStorage
 } from '@powell/models';
 import {TemplateDirective} from "@powell/directives/template";
-import {PrimeFilterMetadata, PrimeScrollerOptions, PrimeSortMeta} from "@powell/primeng/api";
+import {
+  PrimeFilterMetadata,
+  PrimeScrollerOptions,
+  PrimeSortFunctionEvent,
+  PrimeSortMeta,
+  PrimeTableColResizeEvent,
+  PrimeTableColumnReorderEvent,
+  PrimeTableContextMenuSelectEvent,
+  PrimeTableContextMenuSelectionChangeEvent,
+  PrimeTableFilterEvent,
+  PrimeTableHeaderCheckboxToggleEvent,
+  PrimeTableLazyLoadEvent,
+  PrimeTablePageEvent,
+  PrimeTableRowCollapseEvent,
+  PrimeTableRowExpandEvent,
+  PrimeTableRowReorderEvent,
+  PrimeTableRowSelectEvent,
+  PrimeTableRowUnSelectEvent,
+  PrimeTableSelectAllChangeEvent,
+  PrimeTableSortEvent,
+  PrimeTableState
+} from "@powell/primeng/api";
 import {PrimeTable} from "@powell/primeng";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'ng-table',
@@ -129,54 +151,54 @@ export class TableComponent implements OnInit, AfterContentInit {
   @Input() stateKey: string;
   @Input() stateStorage: NgTableStateStorage = 'session';
   @Input() exportHeader: string;
-  @Output() onTableReady = new EventEmitter();
-  @Output() onRowSelect = new EventEmitter();
-  @Output() onRowUnselect = new EventEmitter();
-  @Output() onPage = new EventEmitter()
-  @Output() onSort = new EventEmitter()
-  @Output() onFilter = new EventEmitter()
-  @Output() onLazyLoad = new EventEmitter()
-  @Output() onRowExpand = new EventEmitter()
-  @Output() onRowCollapse = new EventEmitter()
-  @Output() onContextMenuSelect = new EventEmitter()
-  @Output() onColResize = new EventEmitter()
-  @Output() onColReorder = new EventEmitter()
-  @Output() onRowReorder = new EventEmitter()
-  @Output() onHeaderCheckboxToggle = new EventEmitter()
-  @Output() onStateSave = new EventEmitter()
-  @Output() onStateRestore = new EventEmitter()
-  @Output() sortFunction = new EventEmitter();
+  @Output() onTableReady = new EventEmitter<Table>();
+  @Output() onRowSelect = new EventEmitter<PrimeTableRowSelectEvent>();
+  @Output() onRowUnselect = new EventEmitter<PrimeTableRowUnSelectEvent>();
+  @Output() onPage = new EventEmitter<PrimeTablePageEvent>();
+  @Output() onSort = new EventEmitter<PrimeTableSortEvent>();
+  @Output() onFilter = new EventEmitter<PrimeTableFilterEvent>();
+  @Output() onLazyLoad = new EventEmitter<NgAsyncEvent<PrimeTableLazyLoadEvent>>();
+  @Output() onRowExpand = new EventEmitter<PrimeTableRowExpandEvent>();
+  @Output() onRowCollapse = new EventEmitter<PrimeTableRowCollapseEvent>();
+  @Output() onContextMenuSelect = new EventEmitter<PrimeTableContextMenuSelectEvent>();
+  @Output() onColResize = new EventEmitter<PrimeTableColResizeEvent>();
+  @Output() onColReorder = new EventEmitter<PrimeTableColumnReorderEvent>();
+  @Output() onRowReorder = new EventEmitter<PrimeTableRowReorderEvent>();
+  @Output() onHeaderCheckboxToggle = new EventEmitter<PrimeTableHeaderCheckboxToggleEvent>();
+  @Output() onStateSave = new EventEmitter<PrimeTableState>();
+  @Output() onStateRestore = new EventEmitter<PrimeTableState>();
+  @Output() sortFunction = new EventEmitter<PrimeSortFunctionEvent>();
   // two-way bindings
   @Input() rows: number;
   @Input() first: number = 0;
   @Input() selectAll: boolean;
-  @Input() selection: any;
+  @Input() selection: any[];
   @Input() contextMenuSelection: any;
-  @Output() firstChange = new EventEmitter();
-  @Output() rowsChange = new EventEmitter();
-  @Output() selectAllChange = new EventEmitter();
-  @Output() selectionChange = new EventEmitter();
-  @Output() contextMenuSelectionChange = new EventEmitter();
+  @Output() firstChange = new EventEmitter<number>();
+  @Output() rowsChange = new EventEmitter<number>();
+  @Output() selectAllChange = new EventEmitter<PrimeTableSelectAllChangeEvent>();
+  @Output() selectionChange = new EventEmitter<any[]>();
+  @Output() contextMenuSelectionChange = new EventEmitter<PrimeTableContextMenuSelectionChangeEvent>();
 
   @ContentChildren(TemplateDirective) templates: QueryList<TemplateDirective>;
   @ViewChild('dataTable', {static: true}) dataTable: PrimeTable;
 
-  captionTemplate: TemplateRef<any>
-  headerTemplate: TemplateRef<any>
-  headerGroupedTemplate: TemplateRef<any>
-  bodyTemplate: TemplateRef<any>
-  footerGroupedTemplate: TemplateRef<any>
-  footerTemplate: TemplateRef<any>
-  summaryTemplate: TemplateRef<any>
-  rowExpansionTemplate: TemplateRef<any>
-  frozenBodyTemplate: TemplateRef<any>
-  frozenRowExpansionTemplate: TemplateRef<any>
-  groupHeaderTemplate: TemplateRef<any>
-  groupFooterTemplate: TemplateRef<any>
-  emptyMessageTemplate: TemplateRef<any>
-  paginatorLeftTemplate: TemplateRef<any>
-  paginatorRightTemplate: TemplateRef<any>
-  loadingBodyTemplate: TemplateRef<any>
+  captionTemplate: TemplateRef<any>;
+  headerTemplate: TemplateRef<any>;
+  headerGroupedTemplate: TemplateRef<any>;
+  bodyTemplate: TemplateRef<any>;
+  footerGroupedTemplate: TemplateRef<any>;
+  footerTemplate: TemplateRef<any>;
+  summaryTemplate: TemplateRef<any>;
+  rowExpansionTemplate: TemplateRef<any>;
+  frozenBodyTemplate: TemplateRef<any>;
+  frozenRowExpansionTemplate: TemplateRef<any>;
+  groupHeaderTemplate: TemplateRef<any>;
+  groupFooterTemplate: TemplateRef<any>;
+  emptyMessageTemplate: TemplateRef<any>;
+  paginatorLeftTemplate: TemplateRef<any>;
+  paginatorRightTemplate: TemplateRef<any>;
+  loadingBodyTemplate: TemplateRef<any>;
   cellTemplates: { [key: string]: TemplateRef<any> } = {}
   loading: boolean;
   activeSortField: string;
@@ -192,7 +214,7 @@ export class TableComponent implements OnInit, AfterContentInit {
     })
   }
 
-  _onSort(event: any) {
+  _onSort(event: PrimeTableSortEvent) {
     if (this.sortMode == 'multiple') {
       if (event.multisortmeta?.length > 1) {
         this.activeSortField = null;
@@ -205,7 +227,7 @@ export class TableComponent implements OnInit, AfterContentInit {
     this.onSort.emit(event);
   }
 
-  onResetSort(event: any) {
+  onResetSort(event: Event) {
     event.stopPropagation();
     this.activeSortField = null;
     this.dataTable.reset();
@@ -292,36 +314,32 @@ export class TableComponent implements OnInit, AfterContentInit {
     (this[name] as EventEmitter<any>).emit(event);
   }
 
-  _onLazyLoad(event) {
+  _onLazyLoad(event: PrimeTableLazyLoadEvent) {
     this.loading = true;
     this.onLazyLoad.emit({event, loadingCallback: this.removeLoading})
   }
 
-  onPageChange(event) {
-    this.onPage.emit(event)
-  }
-
-  onFirstChange(event) {
+  onFirstChange(event: number) {
     this.first = event;
-    this.firstChange.emit(this.firstChange);
+    this.firstChange.emit(this.first);
   }
 
-  onRowsChange(event) {
+  onRowsChange(event: number) {
     this.rows = event;
     this.rowsChange.emit(this.rows);
   }
 
-  onSelectAllChange(event) {
-    this.selectAll = event;
-    this.selectAllChange.emit(this.selectAll);
+  onSelectAllChange(event: PrimeTableSelectAllChangeEvent) {
+    this.selectAll = event.checked;
+    this.selectAllChange.emit(event);
   }
 
-  onSelectionChange(event) {
+  onSelectionChange(event: any[]) {
     this.selection = event;
     this.selectionChange.emit(this.selection);
   }
 
-  onContextMenuSelectionChange(event) {
+  onContextMenuSelectionChange(event: PrimeTableContextMenuSelectionChangeEvent) {
     this.contextMenuSelection = event;
     this.contextMenuSelectionChange.emit(this.contextMenuSelection);
   }
@@ -341,9 +359,12 @@ export class TableComponent implements OnInit, AfterContentInit {
   onChangeFilterValue(event: any, filterCallback: Function, col: NgTableColDef) {
     let filterValue;
     switch (col.filter.type) {
+      case 'text':
+        const inputElement = event.target as HTMLInputElement;
+        filterValue = inputElement.value;
+        break;
       case 'multi-select':
       case 'dropdown':
-      case 'text':
         filterValue = event.value;
         break;
       case 'boolean':
@@ -359,7 +380,7 @@ export class TableComponent implements OnInit, AfterContentInit {
     if (!this.lazy) {
       filterCallback(filterValue.toString());
     } else {
-      this.onFilter.emit({value: filterValue, col})
+      this.onFilter.emit({filteredValue: filterValue, col} as any)
     }
   }
 
@@ -395,8 +416,9 @@ export class TableComponent implements OnInit, AfterContentInit {
     }
   }
 
-  onGlobalFilterChange(event: any) {
-    this.dataTable.filterGlobal(event.target.value, 'contains')
+  onGlobalFilterChange(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.dataTable.filterGlobal(inputElement.value, 'contains')
   }
 
   removeLoading = (ok: boolean = true) => {
