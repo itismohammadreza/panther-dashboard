@@ -3,13 +3,25 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <ng-table [items]="tableData" [actionsConfig]="tableActions" [colDef]="colDef"></ng-table>
+          <ng-button class="mb-2" color="success" icon="pi pi-plus" (onClick)="addModelData()"></ng-button>
+          <ng-table [items]="tableData" [actionsConfig]="tableActions" [colDef]="colDef" *ngIf="pageLoaded">
+            <ng-container *ngFor="let field of templateRenderFieldNames">
+              <ng-template let-data [ngTemplate]="field">
+                <ng-button
+                  size="sm"
+                  appearance="text"
+                  label="Record Details"
+                  (onClick)="showObjectRecordDetails(data,field)">
+                </ng-button>
+              </ng-template>
+            </ng-container>
+          </ng-table>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<p-dialog [(visible)]="dialogVisible">
-  {{currentRecord | json}}
+<p-dialog [(visible)]="dialogVisible" [draggable]="false" [modal]="true">
+  {{objectiveRecord | json}}
 </p-dialog>

@@ -151,8 +151,8 @@ export class OverlayService {
     const {instance} = this.confirmPopupCmpRef;
     const confirmation: PrimeConfirmation = {
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'تایید',
-      rejectLabel: 'لغو',
+      acceptLabel: 'Ok',
+      rejectLabel: 'Cancel',
       ...options,
       acceptButtonStyleClass: `${options.acceptButtonStyleClass} ${options.buttonFull ? 'w-100' : ''} p-button-${options.acceptColor} p-button-${options.acceptAppearance} p-button-${options.buttonSize}`,
       rejectButtonStyleClass: `${options.rejectButtonStyleClass} ${options.buttonFull ? 'w-100' : ''} p-button-${options.rejectColor} p-button-${options.rejectAppearance || 'outlined'} p-button-${options.buttonSize}`,
@@ -288,8 +288,8 @@ export class OverlayService {
       style: {width: '400px'},
       acceptVisible: true,
       rejectVisible: true,
-      acceptLabel: 'تایید',
-      rejectLabel: 'بستن',
+      acceptLabel: 'Ok',
+      rejectLabel: 'Cancel',
       rejectAppearance: 'outlined',
       rejectColor: 'danger',
       defaultFocus: 'accept',

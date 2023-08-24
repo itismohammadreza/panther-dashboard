@@ -9,6 +9,7 @@ import {NavbarMenuComponent} from "@modules/layout/navbar-menu/navbar-menu.compo
 import {DashboardPage} from "@modules/main/pages/dashboard/dashboard.page";
 import {ManagerPage} from "@modules/main/pages/manager/manager.page";
 import {TableModule} from "@powell/components/table";
+import {ButtonModule} from "@powell/components/button";
 
 export const DECLARATIONS: Type<any>[] = [
   MainPage,
@@ -24,5 +25,6 @@ export const IMPORTS: Type<any>[] = [
   MainRoutingModule,
   PrimeScrollTopModule,
   TableModule,
-  PrimeDialogModule
+  PrimeDialogModule,
+  ButtonModule
 ];

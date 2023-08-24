@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {lastValueFrom} from "rxjs";
 import {ApiService} from '@core/http';
-import {DatabaseRecord, DataModel} from "@core/models/data.models";
+import {ModelData, Model} from "@core/models/data.models";
 
 @Injectable({
   providedIn: 'root'
@@ -14,21 +14,21 @@ export class DataService extends ApiService {
   }
 
   getModels() {
-    const res = this._get<DataModel[]>(`${this.endpoint}`);
+    const res = this._get<Model[]>(this.endpoint);
     return lastValueFrom(res);
   }
 
-  getRecords(index: string) {
-    const res = this._get<DatabaseRecord<any>>(`${this.endpoint}/${index}`);
+  getModelData(index: number) {
+    const res = this._get<ModelData>(`${this.endpoint}/${index}`);
     return lastValueFrom(res);
   }
 
-  getRecordById(index: number, id: string) {
+  getModelDataById(index: number, id: string) {
     const res = this._get<any>(`${this.endpoint}/${index}/${id}`);
     return lastValueFrom(res);
   }
 
-  deleteRecord(index: number, id: string) {
+  deleteModelData(index: number, id: string) {
     const res = this._delete<any>(`${this.endpoint}/${index}/${id}`);
     return lastValueFrom(res);
   }
